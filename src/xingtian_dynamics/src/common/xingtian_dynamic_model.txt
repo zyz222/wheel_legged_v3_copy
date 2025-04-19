@@ -1,0 +1,170 @@
+/**********************************************************************
+ Copyright (c) 2020-2023, zyz. All rights reserved.
+***********************************************************************/
+#include "common/xingtianrobot.h"
+#include <iostream>
+#include <cmath>
+#include "common/xingtian_dynamic_model.h"
+using namespace std;
+// DynamicRobot::DynamicRobot(){};
+
+//计算惯性矩阵
+Mat3 DynamicRobot::calcInertialMatrix(const Vec3 &theta){
+    std::cout<<"inertiamatrix_1"<<std::endl;
+    double c1 = std::cos(theta(0));
+    double c2 = std::cos(theta(1));
+    double s1 = std::sin(theta(0));
+    double s2 = std::sin(theta(1));
+    double c12 = std::cos(theta(0) + theta(1));
+    double s12 = std::sin(theta(0) + theta(1));
+    m11 = Izz1 + Izz2 + Izz3 
+          + wheel_mass * (L2 * c12 + L1 * c1) * (L2 * c12 + L1 * c1)
+          + knee_mass * (Lc2 * c12 + L1 * c1) * (Lc2 * c12 + L1 * c1)
+          + wheel_mass * (L2 * s12 + L1 * s1) * (L2 * s12 + L1 * s1)
+          + knee_mass * (Lc2 * s12 + L1 * s1) * (Lc2 * s12 + L1 * s1)
+          + hip_mass * Lc1 * Lc1;
+
+    m12 = Izz2 + Izz3 + wheel_mass *L2 *s12 * (L2 * s12 + L1 * s1)
+          +Lc2 * knee_mass * s12 * (Lc2 * s12 + L1 * s1)
+          + wheel_mass * L2 * c12 * (L2 * c12 + L1 * c1)
+          + knee_mass * Lc2 * c12 * (Lc2 * c12 + L1 * c1);
+    m13 = Izz3;
+    m21 = m12;
+    m22 = wheel_mass * L2 * L2 + knee_mass * Lc2 * Lc2 + Izz2 + Izz3;
+    m23 = Izz3;
+    m31 = m13;
+    m32 = m23;
+    m33 = Izz3;
+    M << m11, m12, m13,
+          m21, m22, m23,
+          m31, m32, m33;
+    return M;
+
+}
+// 计算科氏力和向心力矩阵
+Mat3 DynamicRobot::calcCoriolisForce(const Vec3 &theta,const Vec3 &dtheta){
+    std::cout<<"coriolisforce_1"<<std::endl;
+    double c1 = std::cos(theta(0));
+    double c2 = std::cos(theta(1));
+    double s1 = std::sin(theta(0));
+    double s2 = std::sin(theta(1));
+    double C12 = std::cos(theta(0) + theta(1));
+    double s12 = std::sin(theta(0) + theta(1));
+    double dq1 = dtheta(0);
+    double dq2 = dtheta(1);
+    c11 = dq2 * (L2 * wheel_mass * C12 *(L2 *s12 + L1 * s1) 
+            + Lc2 * knee_mass * C12 * (Lc2 * s12 + L1 * s1)
+            -L2 * wheel_mass * s12 * (L2 * C12 + L1 * c1)
+            -Lc2 * knee_mass * s12 * (Lc2 * C12 + L1 * c1));
+    c12 = dq1 *(L2 * wheel_mass * C12 * (L2 * s12 + L1 * s1)
+           + Lc2 * knee_mass * C12 * (Lc2 * s12 + L1 * s1)
+           -L2 * wheel_mass * s12 * (L2 * C12 + L1 * c1)
+            -Lc2 * knee_mass * s12 * (Lc2 * C12 + L1 * c1))
+            + dq2 * (L2 * wheel_mass * C12 * (L2 * s12 + L1 * s1)
+            + Lc2 * knee_mass * C12 * (Lc2 * s12 + L1 * s1)
+            -L2 * wheel_mass * s12 * (L2 * C12 + L1 * c1)
+            -Lc2 * knee_mass * s12 * (Lc2 * C12 + L1 * c1));
+    c13 = c22 =c23 =c31 =c32 = c33 =0;
+    c21 = -dq1 * (L2 * wheel_mass * C12 * (L2 * s12 + L1 * s1)
+            + Lc2 * knee_mass * C12 * (Lc2 * s12 + L1 * s1)
+            -L2 * wheel_mass * s12 * (L2 * C12 + L1 * c1)
+            -Lc2 * knee_mass * s12 * (Lc2 * C12 + L1* c1));
+    C << c11, c12, c13,
+        c21, c22, c23,
+        c31, c32, c33;
+    return C;
+
+}
+
+//计算重力项矩阵
+Vec3 DynamicRobot::calcGravityForce(const Vec3 &theta){
+    // std::cout<<"gravity_1"<<std::endl;
+    // std::cout<<"theta"<<theta<<std::endl;
+    double c1 = std::cos(theta(0));
+    double c2 = std::cos(theta(1));
+    double s1 = std::sin(theta(0));
+    double s2 = std::sin(theta(1));
+    double c12 = std::cos(theta(0) + theta(1));
+    double s12 = std::sin(theta(0) + theta(1));
+    // std::cout<<"g"<< g <<std::endl;
+    g1 = g *( wheel_mass * (L2 * c12 + L1 * c1) 
+            + knee_mass * (Lc2 * c12 + L1 * c1) 
+            + hip_mass * (Lc1 * c1));
+    g2 = g * (wheel_mass * (L2 * c12) 
+            + knee_mass * (L2 * c12 + L1 * c1));
+    g3 = 0.0;
+    G << g1, g2, g3;
+    // std::cout<<"gravity_2"<<std::endl;
+    return G;
+}
+
+//计算关节力矩、无接触力的情况
+Vec3 DynamicRobot::calcJointTorque(const Vec3 &theta,const Vec3 &dtheta,const Vec3 &ddtheta){
+    Vec3 Torque;  //关节力矩
+    Torque = calcInertialMatrix(theta) * ddtheta 
+            + calcCoriolisForce(theta,dtheta) * dtheta 
+            + calcGravityForce(theta);
+    return Torque;
+}
+
+// 计算关节力矩，带接触力
+Vec3 DynamicRobot::calcJointTorqueForce(const Vec3 &theta,const Vec3 &dtheta,const Vec3 &ddtheta,const Vec3 &F){
+    Vec3 Torque;  //关节力矩
+    std::cout << "theta: " << theta << std::endl;
+    Torque = calcInertialMatrix(theta) * ddtheta 
+            + calcCoriolisForce(theta,dtheta) * dtheta 
+            + calcGravityForce(theta) 
+            + F;
+    return Torque;
+}
+//无接触力计算关节驱动力矩
+Vec34 DynamicRobot::calcJointTorqueTotal(const Vec34 &theta,const Vec34 &dtheta,const Vec34 &ddtheta){
+    Vec34 _joint_torque; //所有的关节力矩
+    for(int i = 0;i<4;i++)
+    {
+        _joint_torque.col(i) = calcJointTorque(theta.col(i),dtheta.col(i),ddtheta.col(i));
+    }
+
+    return _joint_torque;
+}
+
+//有接触力，计算关节力矩
+Vec34 DynamicRobot::calcJointTorqueForceTotal(const Vec34 &theta,const Vec34 &dtheta,const Vec34 &ddtheta,const Vec34 &F){
+    Vec34 _joint_torque; //所有的关节力矩
+    std::cout << "theta: " << theta<< std::endl;
+    for(int i = 0;i<4;i++)
+    {   std::cout << "theta.col(i): " << theta.col(i) << std::endl;
+        _joint_torque.col(i) = calcJointTorqueForce(theta.col(i),dtheta.col(i),ddtheta.col(i),F.col(i));
+    }
+    return _joint_torque;
+}
+
+Vec34 DynamicRobot::calcJointAcc(const Vec34 &theta,const Vec34 &dtheta,const Vec34 &ddtheta,const Vec34 &contact_torque,const Vec34 &_joint_torque){
+    Vec34 _joint_acc; //所有的关节加速度
+    for(int i = 0;i<4;i++){
+        _joint_acc.col(i) = calcInertialMatrix(theta.col(i)).inverse() * (_joint_torque.col(i) 
+        - contact_torque.col(i)
+        - calcCoriolisForce(theta.col(i),dtheta.col(i)) * dtheta.col(i) 
+        - calcGravityForce(theta.col(i)));
+     }
+     return _joint_acc;
+}
+
+
+xingtianDynamicRobot::xingtianDynamicRobot(){
+    
+    // std::cout<<"xingtianDynamicRobot"<<std::endl;
+    //大腿、小腿、车轮转动惯量 ，在这里进行赋值！！
+    Izz1 = 0.000410431;
+    Izz2 = 0.000198018;
+    Izz3 = 0.013094099;
+    hip_mass = 0.25201;    //大腿质量
+    knee_mass = 0.102;    //小腿质量
+    wheel_mass = 3.509;    //车轮质量
+    L1 = 0.14; 
+    L2 = 0.14;
+    Lc1 = 0.048;
+    Lc2 = 0.08;  //连杆长度以及重心位置  这些在这里进行赋值！！
+    g = 9.81;
+}
+// #endif  // COMPILE_WITH_SIMULATION

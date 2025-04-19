@@ -1,0 +1,2065 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-1-g15f4949  Build Version: 1.6.7594.29634
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+     <!-- 关节传感器，这里需要插入虚假的关节，限制住不动才行 -->
+<robot name="xingtian" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!--<xacro:include filename="$(find xingtian)/urdf/xingtian.gazebo.xacro" />-->
+  <gazebo>
+   <plugin name = "gazebo_ros_control" filename="libgazebo_ros_control.so">
+     <robotNamespace>/xingtian</robotNamespace>
+     <controlPeriod>0.001</controlPeriod>
+     <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+     <legacyModeNS>true</legacyModeNS>
+   </plugin>
+  </gazebo>
+  <model name = "xingtian">
+    <pose>0 0 0 0 0 0 </pose>
+  </model>
+  <!--gazebo_ros_control  and camera and imu and lidar-->
+  <xacro:arg name = "laser_visual" default = "false" />
+  <xacro:arg name = "camera_visual" default = "false" />
+  <xacro:arg name = "imu_visual" default = "false" />
+
+ <gazebo reference = "base_link">
+    <material>Gazebo/Green</material>
+    <turnGravityOff>false</turnGravityOff>
+ </gazebo>
+
+ <gazebo reference = "zht_yao">  <!--从上往下-->
+      <mu1>0.2</mu1>
+      <mu2>0.2</mu2>
+      <kp>1000000.0</kp>
+      <kd>1.0</kd>
+      <minDepth>0.00</minDepth>
+      <maxVel>2.0</maxVel>
+      <fdir1>1 0 0 </fdir1>     <!-- force direaction  -->
+ </gazebo>
+
+ <gazebo reference = "zht_qubing">
+      <mu1>0.2</mu1>
+      <mu2>0.2</mu2>
+      <kp>1000000.0</kp>
+      <kd>1.0</kd>
+      <minDepth>0.00</minDepth>
+      <maxVel>2.0</maxVel>
+      <fdir1>1 0 0 </fdir1>     <!-- force direaction  -->
+ </gazebo>
+
+ <gazebo reference = "zht_dianjizhou">
+      <mu1>0.2</mu1>
+      <mu2>0.2</mu2>
+      <kp>1000000.0</kp>
+      <kd>1.0</kd>
+      <minDepth>0.00</minDepth>
+      <maxVel>2.0</maxVel>
+      <fdir1>1 0 0 </fdir1>     <!-- force direaction  -->
+ </gazebo>
+
+ <gazebo reference = "zht_wheel">
+      <mu1>0.8</mu1>
+      <mu2>0.6</mu2>
+      <kp>1000000.0</kp>
+      <kd>1.0</kd>
+      <minDepth>0.00</minDepth>
+      <maxVel>2.0</maxVel>
+      <fdir1>1 0 0 </fdir1>     <!-- force direaction  -->
+ </gazebo>
+
+ <gazebo reference = "yht_yao">  <!--从上往下-->
+      <mu1>0.2</mu1>
+      <mu2>0.2</mu2>
+      <kp>1000000.0</kp>
+      <kd>1.0</kd>
+      <minDepth>0.00</minDepth>
+      <maxVel>2.0</maxVel>
+      <fdir1>1 0 0 </fdir1>     <!-- force direaction  -->
+ </gazebo>
+
+ <gazebo reference = "yht_qubing">
+      <mu1>0.2</mu1>
+      <mu2>0.2</mu2>
+      <kp>1000000.0</kp>
+      <kd>1.0</kd>
+      <minDepth>0.00</minDepth>
+      <maxVel>2.0</maxVel>
+      <fdir1>1 0 0 </fdir1>     <!-- force direaction  -->
+ </gazebo>
+
+ <gazebo reference = "yht_dianjizhou">
+      <mu1>0.2</mu1>
+      <mu2>0.2</mu2>
+      <kp>1000000.0</kp>
+      <kd>1.0</kd>
+      <minDepth>0.00</minDepth>
+      <maxVel>2.0</maxVel>
+      <fdir1>1 0 0 </fdir1>     <!-- force direaction  -->
+ </gazebo>
+
+ <gazebo reference = "yht_wheel">
+      <mu1>0.8</mu1>
+      <mu2>0.6</mu2>
+      <kp>1000000.0</kp>
+      <kd>1.0</kd>
+      <minDepth>0.00</minDepth>
+      <maxVel>2.0</maxVel>
+      <fdir1>1 0 0 </fdir1>     <!-- force direaction  -->
+ </gazebo>
+
+ <gazebo reference = "yqt_yao">  <!--从上往下-->
+      <mu1>0.2</mu1>
+      <mu2>0.2</mu2>
+      <kp>1000000.0</kp>
+      <kd>1.0</kd>
+      <minDepth>0.00</minDepth>
+      <maxVel>2.0</maxVel>
+      <fdir1>1 0 0 </fdir1>     <!-- force direaction  -->
+ </gazebo>
+
+ <gazebo reference = "yqt_qubing">
+      <mu1>0.2</mu1>
+      <mu2>0.2</mu2>
+      <kp>1000000.0</kp>
+      <kd>1.0</kd>
+      <minDepth>0.00</minDepth>
+      <maxVel>2.0</maxVel>
+      <fdir1>1 0 0 </fdir1>     <!-- force direaction  -->
+ </gazebo>
+
+ <gazebo reference = "yqt_dianjizhou">
+      <mu1>0.2</mu1>
+      <mu2>0.2</mu2>
+      <kp>1000000.0</kp>
+      <kd>1.0</kd>
+      <minDepth>0.00</minDepth>
+      <maxVel>2.0</maxVel>
+      <fdir1>1 0 0 </fdir1>     <!-- force direaction  -->
+ </gazebo>
+
+ <gazebo reference = "yqt_wheel">
+      <mu1>0.8</mu1>
+      <mu2>0.6</mu2>
+      <kp>1000000.0</kp>
+      <kd>1.0</kd>
+      <minDepth>0.00</minDepth>
+      <maxVel>2.0</maxVel>
+      <fdir1>1 0 0 </fdir1>     <!-- force direaction  -->
+ </gazebo>
+
+ <gazebo reference = "zqt_yao">  <!--从上往下-->
+      <mu1>0.2</mu1>
+      <mu2>0.2</mu2>
+      <kp>1000000.0</kp>
+      <kd>1.0</kd>
+      <minDepth>0.00</minDepth>
+      <maxVel>2.0</maxVel>
+      <fdir1>1 0 0 </fdir1>     <!-- force direaction  -->
+ </gazebo>
+
+  <gazebo reference = "zqt_qubing">
+      <mu1>0.2</mu1>
+      <mu2>0.2</mu2>
+      <kp>1000000.0</kp>
+      <kd>1.0</kd>
+      <minDepth>0.00</minDepth>
+      <maxVel>2.0</maxVel>
+      <fdir1>1 0 0 </fdir1>     <!-- force direaction  -->
+  </gazebo>
+
+  <gazebo reference = "zqt_dianjizhou">
+      <mu1>0.2</mu1>
+      <mu2>0.2</mu2>
+      <kp>1000000.0</kp>
+      <kd>1.0</kd>
+      <minDepth>0.00</minDepth>
+      <maxVel>2.0</maxVel>
+      <fdir1>1 0 0 </fdir1>     <!-- force direaction  -->
+  </gazebo>
+
+  <gazebo reference = "zqt_wheel">
+      <mu1>0.8</mu1>
+      <mu2>0.6</mu2>
+      <kp>1000000.0</kp>
+      <kd>1.0</kd>
+      <minDepth>0.00</minDepth>
+      <maxVel>2.0</maxVel>
+      <fdir1>1 0 0 </fdir1>     <!-- force direaction  -->
+  </gazebo>
+
+  <!-- sensor -->
+
+  <!-- camera -->
+  <gazebo reference="camera_link">
+    <material>Gazebo/Black</material>
+    <sensor type="camera" name="camera">
+      <update_rate>300.0</update_rate>
+      <camera name="head">
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>800</width>
+          <height>800</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <!-- Noise is sampled independently per pixel on each frame.
+               That pixel's noise value is added to each of its color
+               channels, which at that point lie in the range [0,1]. -->
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <plugin name="camera_controller" filename="/opt/ros/noetic/lib/libgazebo_ros_camera.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>0.0</updateRate>
+        <cameraName>xingtian/camera</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>    
+        <frameName>camera_link</frameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+  </gazebo>
+  <!-- laser-->
+   <gazebo reference="laser_link">
+    <sensor type="gpu_ray" name="head_hokuyo_sensor">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>false</visualize>
+      <update_rate>40</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>720</samples>
+            <resolution>1</resolution>
+            <min_angle>-1.570796</min_angle>
+            <max_angle>1.570796</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.10</min>
+          <max>30.0</max>
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <!-- Noise parameters based on published spec for Hokuyo laser
+               achieving "+-30mm" accuracy at range < 10m.  A mean of 0.0m and
+               stddev of 0.01m will put 99.7% of samples within 0.03m of the true
+               reading. -->
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_gpu_laser.so">
+        <topicName>/xingtian/laser/scan</topicName>
+        <frameName>laser_link</frameName>
+      </plugin>
+    </sensor>
+  </gazebo>
+  <!-- imu-->
+  <gazebo reference="imu_link">
+    <gravity>true</gravity>
+    <sensor name="imu_sensor" type="imu">
+      <always_on>true</always_on>
+      <update_rate>300</update_rate>
+      <visualize>true</visualize>
+      <topic>__default_topic__</topic>
+      <plugin filename="/opt/ros/noetic/lib/libgazebo_ros_imu_sensor.so" name="imu_plugin">
+        <topicName>imu</topicName>
+        <bodyName>imu_link</bodyName>
+        <updateRateHZ>100.0</updateRateHZ>
+        <gaussianNoise>0.0</gaussianNoise>
+        <xyzOffset>0 0 0</xyzOffset>
+        <rpyOffset>0 0 0</rpyOffset>
+        <frameName>imu_link</frameName>
+        <initialOrientationAsReference>false</initialOrientationAsReference>
+      </plugin>
+      <pose>0 0 0 0 0 0</pose>
+    </sensor>
+  </gazebo>
+<!-- 质心轨迹显示 -->
+<!-- Show the trajectory of base_link center. -->
+  <gazebo>
+    <plugin name="3dplot" filename="libLinkPlot3DPlugin.so">
+        <frequency>300</frequency>
+        <plot>
+            <link>base_link</link>
+            <pose>0 0 0 0 0 0</pose>
+            <material>Gazebo/Yellow</material>
+        </plot>
+    </plugin>
+  </gazebo>
+  <gazebo>
+    <plugin name="ground_truth_odometry" filename="libgazebo_ros_p3d.so">
+      <alwaysOn>true</alwaysOn>
+      <updateRate>100.0</updateRate>
+      <bodyName>base_link</bodyName>
+      <topicName>xingtian/base_pose_ground</topicName>
+      <gaussianNoise>0.01</gaussianNoise>
+      <frameName>map</frameName>
+      <xyzOffsets>0 0 0</xyzOffsets>
+      <rpyOffsets>0 0 0</rpyOffsets>
+    </plugin>
+  </gazebo>
+
+<!-- 施加外力 -->
+  <gazebo>
+      <plugin filename="libgazebo_ros_force.so" name="gazebo_ros_force">
+          <bodyName>base_link</bodyName>
+          <topicName>/apply_force/base_link</topicName>
+      </plugin>
+  </gazebo>
+<!-- 触地显示 -->
+<!-- Foot contacts. -->
+  <gazebo reference="yqt_wheel">
+      <sensor name="FR_foot_contact" type="contact">
+      <update_rate>100</update_rate>
+      <plugin name="contactPlugin" filename="libunitreeFootContactPlugin.so"/>
+      <contact>
+          <collision>FR_calf_fixed_joint_lump__FR_foot_collision_1</collision>
+      </contact>
+      </sensor>
+  </gazebo>
+  <gazebo reference="zqt_wheel">
+      <sensor name="FL_foot_contact" type="contact">
+      <update_rate>100</update_rate>
+      <plugin name="contactPlugin" filename="libunitreeFootContactPlugin.so"/>
+      <contact>
+          <collision>FL_calf_fixed_joint_lump__FL_foot_collision_1</collision>
+      </contact>
+      </sensor>
+  </gazebo>
+  <gazebo reference="yht_wheel">
+      <sensor name="RR_foot_contact" type="contact">
+      <update_rate>100</update_rate>
+      <plugin name="contactPlugin" filename="libunitreeFootContactPlugin.so"/>
+      <contact>
+          <collision>RR_calf_fixed_joint_lump__RR_foot_collision_1</collision>
+      </contact>
+      </sensor>
+  </gazebo>
+  <gazebo reference="zht_wheel">
+      <sensor name="RL_foot_contact" type="contact">
+      <update_rate>100</update_rate>
+      <plugin name="contactPlugin" filename="libunitreeFootContactPlugin.so"/>
+      <contact>
+          <collision>RL_calf_fixed_joint_lump__RL_foot_collision_1</collision>
+      </contact>
+      </sensor>
+  </gazebo>
+
+  <!-- Visualization of Foot contacts. -->
+  <gazebo reference="yqt_wheel">
+      <visual>
+          <plugin name="drawForcePlugin" filename="libunitreeDrawForcePlugin.so">
+              <topicName>FR_foot_contact</topicName>
+          </plugin>
+      </visual>
+  </gazebo>
+  <gazebo reference="zqt_wheel">
+      <visual>
+          <plugin name="drawForcePlugin" filename="libunitreeDrawForcePlugin.so">
+              <topicName>FL_foot_contact</topicName>
+          </plugin>
+      </visual>
+  </gazebo>
+  <gazebo reference="yht_wheel">
+      <visual>
+          <plugin name="drawForcePlugin" filename="libunitreeDrawForcePlugin.so">
+              <topicName>RR_foot_contact</topicName>
+          </plugin>
+      </visual>
+  </gazebo>
+  <gazebo reference="zht_wheel">
+      <visual>
+          <plugin name="drawForcePlugin" filename="libunitreeDrawForcePlugin.so">
+              <topicName>RL_foot_contact</topicName>
+          </plugin>
+      </visual>
+  </gazebo>
+
+
+
+
+  <!-- 力矩感知 -->
+  <gazebo  reference="zqt_joint1">
+      <provideFeedback>true</provideFeedback>
+  </gazebo>
+  <gazebo  reference="zqt_joint3">
+      <provideFeedback>true</provideFeedback>
+  </gazebo>
+  <gazebo  reference="zqt_joint2">
+      <provideFeedback>true</provideFeedback>
+  </gazebo>
+  <gazebo  reference="yqt_joint1">
+      <provideFeedback>true</provideFeedback>
+  </gazebo>
+  <gazebo  reference="yqt_joint3">
+      <provideFeedback>true</provideFeedback>
+  </gazebo>
+  <gazebo  reference="yqt_joint2">
+      <provideFeedback>true</provideFeedback>
+  </gazebo>
+  <gazebo  reference="zht_joint1">
+      <provideFeedback>true</provideFeedback>
+  </gazebo>
+ <gazebo  reference="zht_joint3">
+      <provideFeedback>true</provideFeedback>
+  </gazebo>
+  <gazebo  reference="zht_joint2">
+      <provideFeedback>true</provideFeedback>
+  </gazebo>
+  <gazebo  reference="yht_joint1">
+      <provideFeedback>true</provideFeedback>
+  </gazebo>
+  <gazebo  reference="yht_joint3">
+      <provideFeedback>true</provideFeedback>
+  </gazebo>
+  <gazebo  reference="yht_joint2">
+      <provideFeedback>true</provideFeedback>
+  </gazebo>
+
+<!-- 虚拟传感器 -->
+   <!-- <gazebo  reference="fake_LF_joint1">
+      <provideFeedback>true</provideFeedback>
+  </gazebo>
+   <gazebo  reference="fake_LR_joint1">
+      <provideFeedback>true</provideFeedback>
+  </gazebo>
+   <gazebo  reference="fake_RR_joint1">
+      <provideFeedback>true</provideFeedback>
+  </gazebo>
+   <gazebo  reference="fake_RF_joint1">
+      <provideFeedback>true</provideFeedback>
+  </gazebo> -->
+
+  <!-- <gazebo>
+        <plugin filename="/opt/ros/noetic/lib/libgazebo_ros_ft_sensor.so" name="ft_sensor">
+            <updateRate>300</updateRate>
+           
+            <topicName>xingtian/force_LR_wheel</topicName>
+            <jointName>zht_joint1</jointName>
+            <force_torque>
+              <frame>world</frame>                
+              <measure_direction>child_to_parent</measure_direction>  
+            </force_torque>
+        </plugin>
+  </gazebo>  -->
+
+
+
+
+
+  <gazebo>
+        <plugin filename="/opt/ros/noetic/lib/libgazebo_ros_ft_sensor.so" name="ft_sensor">
+            <updateRate>100</updateRate>
+            <!-- <frame>base_link</frame> -->
+            <topicName>xingtian/torque_zqt_wheel</topicName>
+            <jointName>zqt_joint1</jointName>
+            <force_torque>
+              <frame>child</frame>                <!-- 统一使用子连杆坐标系 -->
+              <measure_direction>child_to_parent</measure_direction>  <!-- 统一测量方向 -->
+            </force_torque>
+        </plugin>
+  </gazebo> 
+  <gazebo>
+        <plugin filename="/opt/ros/noetic/lib/libgazebo_ros_ft_sensor.so" name="ft_sensor">
+            <updateRate>100</updateRate>
+            <topicName>xingtian/torque_zqt_hip</topicName>
+            <jointName>zqt_joint3</jointName>
+         
+        </plugin>
+  </gazebo> 
+  <gazebo>
+        <plugin filename="/opt/ros/noetic/lib/libgazebo_ros_ft_sensor.so" name="ft_sensor">
+            <updateRate>100</updateRate>
+            <topicName>xingtian/torque_zqt_knee</topicName>
+            <jointName>zqt_joint2</jointName>
+            <!-- <force_torque>
+              <frame>child</frame>                
+              <measure_direction>child_to_parent</measure_direction>  
+            </force_torque> -->
+        </plugin>
+  </gazebo> 
+   <gazebo>
+        <plugin filename="/opt/ros/noetic/lib/libgazebo_ros_ft_sensor.so" name="ft_sensor">
+            <updateRate>100</updateRate>
+            <topicName>xingtian/torque_yqt_wheel</topicName>
+            <jointName>yqt_joint1</jointName>
+            <!-- <frame>base_link</frame> -->
+            <force_torque>
+              <frame>child</frame>               
+              <measure_direction>child_to_parent</measure_direction>  
+            </force_torque>
+        </plugin>
+  </gazebo> 
+  <gazebo>
+        <plugin filename="/opt/ros/noetic/lib/libgazebo_ros_ft_sensor.so" name="ft_sensor">
+            <updateRate>100</updateRate>
+            <topicName>xingtian/torque_yqt_hip</topicName>
+            <jointName>yqt_joint3</jointName>
+            <!-- <force_torque>
+              <frame>child</frame>                
+              <measure_direction>child_to_parent</measure_direction> 
+            </force_torque> -->
+        </plugin>
+  </gazebo> 
+  <gazebo>
+        <plugin filename="/opt/ros/noetic/lib/libgazebo_ros_ft_sensor.so" name="ft_sensor">
+            <updateRate>100</updateRate>
+            <topicName>xingtian/torque_yqt_knee</topicName>
+            <jointName>yqt_joint2</jointName>
+            <!-- <force_torque>
+              <frame>child</frame>                
+              <measure_direction>child_to_parent</measure_direction>  
+            </force_torque> -->
+        </plugin>
+  </gazebo> 
+   <gazebo>
+        <plugin filename="/opt/ros/noetic/lib/libgazebo_ros_ft_sensor.so" name="ft_sensor">
+            <updateRate>100</updateRate>
+            <topicName>xingtian/torque_zht_wheel</topicName>
+            <jointName>zht_joint1</jointName>
+            <frame>base_link</frame>
+            <!-- <force_torque>
+              <frame>child</frame>                
+              <measure_direction>child_to_parent</measure_direction>  
+            </force_torque> -->
+        </plugin>
+  </gazebo> 
+  <gazebo>
+        <plugin filename="/opt/ros/noetic/lib/libgazebo_ros_ft_sensor.so" name="ft_sensor">
+            <updateRate>100</updateRate>
+            <topicName>xingtian/torque_zht_hip</topicName>
+            <jointName>zht_joint3</jointName>
+            <!-- <force_torque>
+              <frame>child</frame>               
+              <measure_direction>child_to_parent</measure_direction>  
+            </force_torque> -->
+        </plugin>
+  </gazebo> 
+  <gazebo>
+        <plugin filename="/opt/ros/noetic/lib/libgazebo_ros_ft_sensor.so" name="ft_sensor">
+            <updateRate>100</updateRate>
+            <topicName>xingtian/torque_zht_knee</topicName>
+            <jointName>zht_joint2</jointName>
+            <!-- <force_torque>
+              <frame>child</frame>                
+              <measure_direction>child_to_parent</measure_direction>  
+            </force_torque> -->
+        </plugin>
+  </gazebo> 
+   <gazebo>
+        <plugin filename="/opt/ros/noetic/lib/libgazebo_ros_ft_sensor.so" name="ft_sensor">
+            <updateRate>100</updateRate>
+            <topicName>xingtian/torque_yht_wheel</topicName>
+            <jointName>yht_joint1</jointName>
+            <frame>base_link</frame>
+            <force_torque>
+              <frame>child</frame>                <!-- 统一使用子连杆坐标系 -->
+              <measure_direction>child_to_parent</measure_direction>  <!-- 统一测量方向 -->
+            </force_torque>
+        </plugin>
+  </gazebo> 
+  <gazebo>
+        <plugin filename="/opt/ros/noetic/lib/libgazebo_ros_ft_sensor.so" name="ft_sensor">
+            <updateRate>100</updateRate>
+            <topicName>xingtian/torque_yht_hip</topicName>
+            <jointName>yht_joint3</jointName>
+            <!-- <force_torque>
+              <frame>child</frame>                
+              <measure_direction>child_to_parent</measure_direction>  
+            </force_torque> -->
+        </plugin>
+  </gazebo> 
+  <gazebo>
+        <plugin filename="/opt/ros/noetic/lib/libgazebo_ros_ft_sensor.so" name="ft_sensor">
+            <updateRate>100</updateRate>
+            <topicName>xingtian/torque_yht_knee</topicName>
+            <jointName>yht_joint2</jointName>
+            <!-- <force_torque>
+              <frame>child</frame>                
+              <measure_direction>child_to_parent</measure_direction>  
+            </force_torque> -->
+        </plugin>
+  </gazebo> 
+  <!-- 力矩感知over -->
+
+  <!-- 下边是力矩可视化 -->
+
+
+
+  <gazebo  reference="zqt_joint1">
+      <sensor name="force_torque" type="force_torque">
+        <always_on>true</always_on>
+        <update_rate>300</update_rate>
+        <visualize>true</visualize>
+        <plugin filename="/opt/ros/noetic/lib/libforce_torque_sensor_controller.so" name="torque_zqt1_plugin">
+        <topicName>torque_zqt1_plugin</topicName>
+          <ros>
+            <namespace>/joint_sensor</namespace>
+            <remap from="~/effort" to="/joint_sensor/effort"/>
+            <remap from="~/torque" to="/joint_sensor/torque"/>
+          </ros>
+        </plugin>
+        <pose>0 0 0 0 0 0</pose>
+      </sensor>
+  </gazebo> 
+  <gazebo  reference="zqt_joint3">
+      <sensor name="force_torque" type="force_torque">
+        <always_on>true</always_on>
+        <update_rate>300</update_rate>
+        <visualize>true</visualize>
+        <plugin filename="/opt/ros/noetic/lib/libforce_torque_sensor_controller.so" name="torque_zqt3_plugin">
+        <topicName>torque_zqt3_plugin</topicName>
+        </plugin>
+        <pose>0 0 0 0 0 0</pose>
+      </sensor>
+  </gazebo> 
+  <gazebo  reference="zqt_joint2">
+      <sensor name="force_torque" type="force_torque">
+        <always_on>true</always_on>
+        <update_rate>300</update_rate>
+        <visualize>true</visualize>
+        <plugin filename="/opt/ros/noetic/lib/libforce_torque_sensor_controller.so" name="torque_zqt2_plugin">
+        <topicName>torque_zqt2_plugin</topicName>
+        </plugin>
+        <pose>0 0 0 0 0 0</pose>
+      </sensor>
+  </gazebo> 
+  <gazebo  reference="zht_joint1">
+      <sensor name="force_torque" type="force_torque">
+        <always_on>true</always_on>
+        <update_rate>300</update_rate>
+        <visualize>true</visualize>
+        <plugin filename="/opt/ros/noetic/lib/libforce_torque_sensor_controller.so" name="torque_zht1_plugin">
+        <topicName>torque_zht1_plugin</topicName>
+        </plugin>
+        <pose>0 0 0 0 0 0</pose>
+      </sensor>
+  </gazebo> 
+  <gazebo  reference="zht_joint3">
+      <sensor name="force_torque" type="force_torque">
+        <always_on>true</always_on>
+        <update_rate>300</update_rate>
+        <visualize>true</visualize>
+        <plugin filename="/opt/ros/noetic/lib/libforce_torque_sensor_controller.so" name="torque_zht3_plugin">
+        <topicName>torque_zht3_plugin</topicName>
+        </plugin>
+        <pose>0 0 0 0 0 0</pose>
+      </sensor>
+  </gazebo> 
+  <gazebo  reference="zht_joint2">
+      <sensor name="force_torque" type="force_torque">
+        <always_on>true</always_on>
+        <update_rate>300</update_rate>
+        <visualize>true</visualize>
+        <plugin filename="/opt/ros/noetic/lib/libforce_torque_sensor_controller.so" name="torque_zht2_plugin">
+        <topicName>torque_zht2_plugin</topicName>
+        </plugin>
+        <pose>0 0 0 0 0 0</pose>
+      </sensor>
+  </gazebo> 
+  <gazebo  reference="yht_joint1">
+      <sensor name="force_torque" type="force_torque">
+        <always_on>true</always_on>
+        <update_rate>300</update_rate>
+        <visualize>true</visualize>
+        <plugin filename="/opt/ros/noetic/lib/libforce_torque_sensor_controller.so" name="torque_yht1_plugin">
+        <topicName>torque_yht1_plugin</topicName>
+        </plugin>
+        <pose>0 0 0 0 0 0</pose>
+      </sensor>
+  </gazebo> 
+  <gazebo  reference="yht_joint3">
+      <sensor name="force_torque" type="force_torque">
+        <always_on>true</always_on>
+        <update_rate>300</update_rate>
+        <visualize>true</visualize>
+        <plugin filename="/opt/ros/noetic/lib/libforce_torque_sensor_controller.so" name="torque_yht3_plugin">
+        <topicName>torque_yht3_plugin</topicName>
+        </plugin>
+        <pose>0 0 0 0 0 0</pose>
+      </sensor>
+  </gazebo>
+  <gazebo  reference="yht_joint2">
+      <sensor name="force_torque" type="force_torque">
+        <always_on>true</always_on>
+        <update_rate>300</update_rate>
+        <visualize>true</visualize>
+        <plugin filename="/opt/ros/noetic/lib/libforce_torque_sensor_controller.so" name="torque_yht2_plugin">
+        <topicName>torque_yht2_plugin</topicName>
+        </plugin>
+        <pose>0 0 0 0 0 0</pose>
+      </sensor>
+   </gazebo> 
+   <gazebo  reference="yqt_joint1">
+      <sensor name="force_torque" type="force_torque">
+        <always_on>true</always_on>
+        <update_rate>300</update_rate>
+        <visualize>true</visualize>
+        <plugin filename="/opt/ros/noetic/lib/libforce_torque_sensor_controller.so" name="torque_yqt1_plugin">
+        <topicName>torque_yqt1_plugin</topicName>
+        </plugin>
+        <pose>0 0 0 0 0 0</pose>
+      </sensor>
+   </gazebo> 
+   <gazebo  reference="yqt_joint3">
+      <sensor name="force_torque" type="force_torque">
+        <always_on>true</always_on>
+        <update_rate>300</update_rate>
+        <visualize>true</visualize>
+        <plugin filename="/opt/ros/noetic/lib/libforce_torque_sensor_controller.so" name="torque_yqt3_plugin">
+        <topicName>torque_yqt3_plugin</topicName>
+        </plugin>
+        <pose>0 0 0 0 0 0</pose>
+      </sensor>
+  </gazebo> 
+  <gazebo  reference="yqt_joint2">
+      <sensor name="force_torque" type="force_torque">
+        <always_on>true</always_on>
+        <update_rate>300</update_rate>
+        <visualize>true</visualize>
+        <plugin filename="/opt/ros/noetic/lib/libforce_torque_sensor_controller.so" name="torque_yqt2_plugin">
+        <topicName>torque_yqt2_plugin</topicName>
+        </plugin>
+        <pose>0 0 0 0 0 0</pose>
+      </sensor>
+  </gazebo>
+    <!-- 试图添加两个控制器对其进行控制，在这里添加zqt的力矩控制器 -->
+
+
+   <transmission name = "zqt_trans1">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name = "zqt_joint1">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name = "effort_motor">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+    <transmission name = "zht_trans1">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name = "zht_joint1">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name = "effort_motor">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+    <transmission name = "zht_trans1">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name = "yqt_joint1">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name = "effort_motor">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+    <transmission name = "yht_trans1">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name = "yht_joint1">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name = "effort_motor">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+    <transmission name = "trans2">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name = "zqt_joint2">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name = "effort_motor">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+    <transmission name = "trans2">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name = "zqt_joint3">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name = "effort_motor">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+    <transmission name = "trans2">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name = "zht_joint2">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name = "effort_motor">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+    <transmission name = "trans2">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name = "zht_joint3">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name = "effort_motor">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+    <transmission name = "trans2">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name = "yht_joint3">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name = "effort_motor">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+    <transmission name = "trans2">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name = "yht_joint2">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name = "effort_motor">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+    <transmission name = "trans2">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name = "yqt_joint3">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name = "effort_motor">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+    <transmission name = "trans2">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name = "yqt_joint2">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name = "effort_motor">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>  
+     <!-- <transmission name = "trans4">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name = "zqt_joint4">
+        <hardwareInterface>hardware_interface/PositonJointInterface</hardwareInterface>
+      </joint>
+      <actuator name = "effort_motor">
+        <hardwareInterface>hardware_interface/PositonJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+    <transmission name = "trans4">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name = "zht_joint4">
+        <hardwareInterface>hardware_interface/PositonJointInterface</hardwareInterface>
+      </joint>
+      <actuator name = "position_motor">
+        <hardwareInterface>hardware_interface/PositonJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+    <transmission name = "trans4">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name = "yht_joint4">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name = "position_motor">
+        <hardwareInterface>hardware_interface/PositonJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+    <transmission name = "trans4">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name = "yqt_joint4">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name = "position_motor">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission> -->
+
+
+
+  <xacro:macro name = "joint_setup_block" params = "joint_name">
+    <gazebo reference = "${joint_name}">
+     <implicitSpringDamper>1</implicitSpringDamper>
+    </gazebo>
+  </xacro:macro>
+  <xacro:joint_setup_block joint_name = "zqt_joint1"/>
+  <xacro:joint_setup_block joint_name = "zqt_joint2"/>
+  <xacro:joint_setup_block joint_name = "zqt_joint3"/>
+  <xacro:joint_setup_block joint_name = "zqt_joint4"/>
+  <xacro:joint_setup_block joint_name = "zht_joint1"/>
+  <xacro:joint_setup_block joint_name = "zht_joint2"/>
+  <xacro:joint_setup_block joint_name = "zht_joint3"/>
+  <xacro:joint_setup_block joint_name = "zht_joint4"/>
+  <xacro:joint_setup_block joint_name = "yht_joint1"/>
+  <xacro:joint_setup_block joint_name = "yht_joint2"/>
+  <xacro:joint_setup_block joint_name = "yht_joint3"/>
+  <xacro:joint_setup_block joint_name = "yht_joint4"/>
+  <xacro:joint_setup_block joint_name = "yqt_joint1"/>
+  <xacro:joint_setup_block joint_name = "yqt_joint2"/>
+  <xacro:joint_setup_block joint_name = "yqt_joint3"/>
+  <xacro:joint_setup_block joint_name = "yqt_joint4"/>
+
+  <!--link and joint-->
+  <link 
+     name="dummy">
+  </link>
+  <joint name="dummy_joint" type="fixed">
+    <origin
+        xyz="0 0 0"
+        rpy="0 0 3.1415926536" />
+     <parent link="dummy"/>
+     <child link="base_link"/>
+  </joint>
+
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.001 0 0"
+        rpy="0 0 0" />
+      <mass
+        value="16.194" />
+      <inertia
+        ixx="0.11843"
+        ixy="2.3961E-06"
+        ixz="1.0252E-05"
+        iyy="0.94087"
+        iyz="5.423E-11"
+        izz="0.90716" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79608 0.82353 0.93725 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="imu_link">
+    <inertial>
+      <origin
+        xyz="-5.5511E-17 0 -0.005"
+        rpy="0 0 0" />
+      <mass
+        value="0.009" />
+      <inertia
+        ixx="7.5E-07"
+        ixy="-1.1731E-22"
+        ixz="3.8933E-23"
+        iyy="7.5E-07"
+        iyz="-1.4392E-22"
+        izz="1.35E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/imu_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 3.1415926536" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/imu_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="imu_joint"
+    type="fixed">
+    <origin
+      xyz="0 0 0.0350983859380697"
+      rpy="0 0 3.1415926536" />
+    <parent
+      link="base_link" />
+    <child
+      link="imu_link" />
+    <axis
+      xyz="0 0 0" 
+      rpy="0 0 0" />
+  </joint>
+   <link name="camera_link">
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+        <geometry>
+          <box size ="0.02 0.03 0.03" />
+        </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+  </link>
+  <joint
+    name="camera_joint"
+    type="fixed">
+    <origin
+      xyz="-0.25 0 0.13"
+      rpy="0 0 3.1415926536" />
+    <parent
+      link="base_link" />
+    <child
+      link="camera_link" />
+  </joint>
+
+
+  <link name="laser_link">
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+         <geometry>
+          <cylinder length ="0.06" radius = "0.04" />
+        </geometry>
+      <material
+        name="red">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    </link>
+  <joint
+    name="laser_joint"
+    type="fixed">
+    <origin
+      xyz="-0.2 0 0.15"
+      rpy="0 0 3.1415926" />
+    <parent
+      link="base_link" />
+    <child
+      link="laser_link" />
+  </joint>
+
+
+
+  <link
+    name="zht_yao">
+    <inertial>
+      <origin
+        xyz="0.00156 0.058320 -0.00156"
+        rpy="0 0 0" />
+      <mass
+        value="2.52" />
+      <inertia
+        ixx="0.012888199"
+        ixy="0.000310840"
+        ixz="-0.000215279"
+        iyy="0.007463864"
+        iyz="-0.000310840"
+        izz="0.012888269" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/zht_yao.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.89804 0.91765 0.92941 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/zht_yao.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="zht_joint4"
+    type="fixed">
+    <origin
+      xyz="0.208574356254452 -0.0825002860694604 -0.000814087912122591"
+      rpy="0 0 3.14159265358979" />
+    <parent
+      link="base_link" />
+    <child
+      link="zht_yao" />
+    <axis
+      xyz="0 1 0" />
+    <sensor name="force_torque" type="force_torque">
+      <update_rate>300</update_rate>
+    </sensor>
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="10000"
+      velocity="10" />
+  </joint>
+  <link
+    name="zht_qubing">
+    <inertial>
+      <origin
+        xyz="-0.02837 -0.008613 -0.039830"
+        rpy="0 0 0" />
+      <mass
+        value="0.25201" />
+      <inertia
+        ixx="0.00093214"
+        ixy="0"
+        ixz="-0.000522990"
+        iyy="0.001291752"
+        iyz="0"
+        izz="0.000410431" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/zht_qubing.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.89804 0.91765 0.92941 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/zht_qubing.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="zht_joint3"
+    type="revolute">
+    <origin
+      xyz="0 0.105 0"
+      rpy="0 -1.5708 0" />
+    <parent
+      link="zht_yao" />
+    <child
+      link="zht_qubing" />
+    <axis
+      xyz="0 -1 0" />
+    <sensor name="force_torque" type="force_torque">
+      <update_rate>300</update_rate>
+    </sensor>
+    <dynamics damping="0.1" friction="0.1"/>
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="10000"
+      velocity="10" />
+  </joint>
+  <link
+    name="zht_dianjizhou">
+    <inertial>
+      <origin
+        xyz="-0.001092 0.020491 -0.080361"
+        rpy="0 0 0" />
+      <mass
+        value="0.102" />
+      <inertia
+        ixx="0.000926259"
+        ixy="-0.0000"
+        ixz="0.000011884"
+        iyy="0.000890565"
+        iyz="-0.0000"
+        izz="0.000051865" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/zht_dianjizhou.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/zht_dianjizhou.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="zht_joint2"
+    type="revolute">
+    <origin
+      xyz="-0.0022457 -0.016 -0.13998"
+      rpy="0 0 0" />
+    <parent
+      link="zht_qubing" />
+    <child
+      link="zht_dianjizhou" />
+    <axis
+      xyz="0 -1 0" />
+    <dynamics damping="0.1" friction="0.1"/>
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="10000"
+      velocity="10" />
+  </joint>
+  <link
+    name="zht_wheel">
+    <inertial>
+      <origin
+        xyz="-0 0.039 -0"
+        rpy="0 0 0" />
+      <mass
+        value="3.509" />
+      <inertia
+        ixx="0.013094099"
+        ixy="0"
+        ixz="0"
+        iyy="0.013976692"
+        iyz="0"
+        izz="0.013094099" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/zht_wheel.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.89804 0.91765 0.92941 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/zht_wheel.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="zht_joint1"
+    type="continuous">
+    <origin
+      xyz="-0.0022457 0.029 -0.13998"
+      rpy="0 0 0" />
+    <parent
+      link="zht_dianjizhou" />
+    <child
+      link="zht_wheel" />
+    <axis
+      xyz="0 -1 0" />
+    <sensor name="force_torque" type="force_torque">
+      <update_rate>300</update_rate>
+    </sensor>
+  </joint>
+
+
+  <link
+    name="yht_yao">
+    <inertial>
+      <origin
+        xyz="0.00156 0.058320 -0.00156"
+        rpy="0 0 0" />
+      <mass
+        value="2.52" />
+      <inertia
+        ixx="0.012888199"
+        ixy="0.000310840"
+        ixz="-0.000215279"
+        iyy="0.007463864"
+        iyz="-0.000310840"
+        izz="0.012888269" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/yht_yao.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.89804 0.91765 0.92941 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/yht_yao.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="yht_joint4"
+    type="fixed">
+    <origin
+      xyz="0.208574356254452 0.0824997139305396 -0.000814087912122591"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="yht_yao" />
+    <axis
+      xyz="0 1 0" />
+    <sensor name="force_torque" type="force_torque">
+      <update_rate>300</update_rate>
+    </sensor>
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="10000"
+      velocity="10" />
+  </joint>
+  <link
+    name="yht_qubing">
+    <inertial>
+      <origin
+        xyz="0.02837 0.008613 -0.039830"
+        rpy="0 0 0" />
+      <mass
+        value="0.25201" />
+      <inertia
+        ixx="0.00093214"
+        ixy="0"
+        ixz="0.000522990"
+        iyy="0.001291752"
+        iyz="0"
+        izz="0.000410431" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/yht_qubing.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.89804 0.91765 0.92941 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/yht_qubing.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="yht_joint3"
+    type="revolute">
+    <origin
+      xyz="0 0.105 0"
+      rpy="0 1.5708 0" />
+    <parent
+      link="yht_yao" />
+    <child
+      link="yht_qubing" />
+    <axis
+      xyz="0 1 0" />         
+    <sensor name="force_torque" type="force_torque">
+      <update_rate>300</update_rate>
+    </sensor>
+    <dynamics damping="0.1" friction="0.1"/>
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="10000"
+      velocity="10" />
+  </joint>
+  <link
+    name="yht_dianjizhou">
+     <!-- xyz="-0.032870 0.020491 -0.073340" -->
+    <inertial>
+      <origin
+        xyz="-0.001092 0.020491 -0.080361"
+        rpy="0 0 0" />
+      <mass
+        value="0.102" />
+      <inertia
+        ixx="0.000926259"
+        ixy="-0.00000"
+        ixz="0.000011884"
+        iyy="0.000890565"
+        iyz="-0.0000"
+        izz="0.000051865" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/yht_dianjizhou.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/yht_dianjizhou.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="yht_joint2"
+    type="revolute">
+    <!-- xyz="0.00224565883616251 -0.0159999999999998 -0.139981988181732" -->
+    <origin
+      xyz="0.0022457 -0.016 -0.13998"
+      rpy="0 0 0" />
+    <parent
+      link="yht_qubing" />
+    <child
+      link="yht_dianjizhou" />
+    <axis
+      xyz="0 1 0" />
+    <sensor name="force_torque" type="force_torque">
+      <update_rate>300</update_rate>
+    </sensor>
+    <dynamics damping="0.1" friction="0.1"/>
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="10000"
+      velocity="10" />
+  </joint>
+  <link
+    name="yht_wheel">
+    <inertial>
+      <origin
+        xyz="-0 0.039 -0"
+        rpy="0 0 0" />
+      <mass
+        value="3.509" />
+      <inertia
+        ixx="0.013094099"
+        ixy="0"
+        ixz="0"
+        iyy="0.013976692"
+        iyz="0"
+        izz="0.013094099" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/yht_wheel.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.89804 0.91765 0.92941 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/yht_wheel.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="yht_joint1"
+    type="continuous">
+    <origin
+      xyz="0.0022457 0.029 -0.13998"
+      rpy="0 0 0" />
+    <parent
+      link="yht_dianjizhou" />
+    <child
+      link="yht_wheel" />
+    <axis
+      xyz="0 1 0" />
+    <sensor name="force_torque" type="force_torque">
+      <update_rate>300</update_rate>
+    </sensor>
+  </joint>
+  <link
+    name="zqt_yao">
+    <inertial>
+      <origin
+        xyz="0.00156 0.058320 -0.00156"
+        rpy="0 0 0" />
+      <mass
+        value="2.52" />
+      <inertia
+        ixx="0.012888199"
+        ixy="0.000310840"
+        ixz="-0.000215279"
+        iyy="0.007463864"
+        iyz="-0.000310840"
+        izz="0.012888269" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/zqt_yao.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.89804 0.91765 0.92941 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/zqt_yao.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="zqt_joint4"
+    type="fixed">
+    <origin
+      xyz="-0.208574356254453 -0.0825002860694604 -0.000814087912122591"
+      rpy="0 0 3.14159265358979" />
+    <parent
+      link="base_link" />
+    <child
+      link="zqt_yao" />
+    <axis
+      xyz="0 1 0" />
+    <!-- <sensor name="joint_sensor" type="force_torque">
+      <plugin name="joint_sensor_plugin" filename="libgazebo_ros_ft_sensor.so">
+        <ros>
+            <namespace>/joint_sensor</namespace>
+            <remap from="~/effort" to="/joint_sensor/effort"/>
+            <remap from="~/torque" to="/joint_sensor/torque"/>
+        </ros>
+      </plugin>
+    </sensor>  -->
+
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="10000"
+      velocity="10" />
+  </joint>
+  <link
+    name="zqt_qubing">
+    <inertial>
+      <origin
+        xyz="-0.02837 -0.008613 -0.039830"
+        rpy="0 0 0" />
+      <mass
+        value="0.25201" />
+      <inertia
+        ixx="0.00093214"
+        ixy="0"
+        ixz="-0.000522990"
+        iyy="0.001291752"
+        iyz="0"
+        izz="0.000410431" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/zqt_qubing.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.89804 0.91765 0.92941 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/zqt_qubing.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="zqt_joint3"
+    type="revolute">
+    <origin
+      xyz="0 0.105 0"
+      rpy="0 -1.5708 0" />
+    <parent
+      link="zqt_yao" />
+    <child
+      link="zqt_qubing" />
+    <axis
+      xyz="0 -1 0" />
+    <sensor name="force_torque" type="force_torque">
+      <update_rate>300</update_rate>
+    </sensor>
+    <dynamics damping="0.1" friction="0.1"/>
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="10000"
+      velocity="10" />
+  </joint>
+  <link
+    name="zqt_dianjizhou">
+    <inertial>
+      <origin
+        xyz="-0.001092 0.020491 -0.080361"
+        rpy="0 0 0" />
+      <mass
+        value="0.102" />
+      <inertia
+        ixx="0.000926259"
+        ixy="-0.0000"
+        ixz="0.000011884"
+        iyy="0.000890565"
+        iyz="-0.0000"
+        izz="0.000051865" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/zqt_dianjizhou.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/zqt_dianjizhou.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="zqt_joint2"
+    type="revolute">
+    <origin
+      xyz="-0.0030126 -0.016 -0.13997"
+      rpy="0 0 0" />
+    <parent
+      link="zqt_qubing" />
+    <child
+      link="zqt_dianjizhou" />
+    <axis
+      xyz="0 -1 0" />
+    <sensor name="force_torque" type="force_torque">
+      <update_rate>300</update_rate>
+    </sensor>
+    <dynamics damping="0.1" friction="0.1"/>
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="10000"
+      velocity="10" />
+  </joint>
+  <link
+    name="zqt_wheel">
+    <inertial>
+      <origin
+        xyz="-0 0.039 -0"
+        rpy="0 0 0" />
+      <mass
+        value="3.509" />
+      <inertia
+        ixx="0.013094099"
+        ixy="0"
+        ixz="0"
+        iyy="0.013976692"
+        iyz="0"
+        izz="0.013094099" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/zqt_wheel.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.89804 0.91765 0.92941 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/zqt_wheel.STL" />
+        <!-- <cylinder radius="0.08" length="0.05"/> -->
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="zqt_joint1"
+    type="continuous">
+    <origin
+      xyz="-0.0030126 0.029 -0.13997"
+      rpy="0 0 0" />
+    <parent
+      link="zqt_dianjizhou" />
+    <child
+      link="zqt_wheel" />
+    <axis
+      xyz="0 -1 0" />
+    <sensor name="force_torque" type="force_torque">
+      <update_rate>300</update_rate>
+    </sensor>
+  </joint>
+  <link
+    name="yqt_yao">
+    <inertial>
+      <origin
+        xyz="0.00156 0.058320 -0.00156"
+        rpy="0 0 0" />
+      <mass
+        value="2.52" />
+      <inertia
+        ixx="0.012888199"
+        ixy="0.000310840"
+        ixz="-0.000215279"
+        iyy="0.007463864"
+        iyz="-0.000310840"
+        izz="0.012888269" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/yqt_yao.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.89804 0.91765 0.92941 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/yqt_yao.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="yqt_joint4"
+    type="fixed">
+    <origin
+      xyz="-0.20857 0.0825 -0.00081409"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="yqt_yao" />
+    <axis
+      xyz="0 1 0" />
+    <sensor name="force_torque" type="force_torque">
+      <update_rate>300</update_rate>
+    </sensor>
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="10000"
+      velocity="10" />
+  </joint>
+  <link
+    name="yqt_qubing">
+    <inertial>
+      <origin
+        xyz="0.02837 0.008613 -0.039830"
+        rpy="0 0 0" />
+      <mass
+        value="0.25201" />
+      <inertia
+        ixx="0.00093214"
+        ixy="0"
+        ixz="0.000522990"
+        iyy="0.001291752"
+        iyz="0"
+        izz="0.000410431" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/yqt_qubing.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.89804 0.91765 0.92941 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/yqt_qubing.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="yqt_joint3"
+    type="revolute">
+    <origin
+      xyz="0 0.105 0"
+      rpy="0 1.5708 0" />
+    <parent
+      link="yqt_yao" />
+    <child
+      link="yqt_qubing" />
+    <axis
+      xyz="0 1 0" />
+    <sensor name="force_torque" type="force_torque">
+       <update_rate>300</update_rate>
+    </sensor>
+    <dynamics damping="0.1" friction="0.1"/>
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="10000"
+      velocity="10" />
+  </joint>
+  <link
+    name="yqt_dianjizhou">
+    <inertial>
+      <origin
+        xyz="-0.001092 0.020491 -0.080361"
+        rpy="0 0 0" />
+      <mass
+        value="0.102" />
+      <inertia
+        ixx="0.000926259"
+        ixy="-0.0000"
+        ixz="0.000011884"
+        iyy="0.000890565"
+        iyz="-0.0000"
+        izz="0.000051865" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/yqt_dianjizhou.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/yqt_dianjizhou.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="yqt_joint2"
+    type="revolute">
+    <origin
+      xyz="0.0030126 -0.016 -0.13997"
+      rpy="0 0 0" />
+    <parent
+      link="yqt_qubing" />
+    <child
+      link="yqt_dianjizhou" />
+    <axis
+      xyz="0 1 0" />
+    <sensor name="force_torque" type="force_torque">
+      <update_rate>300</update_rate>
+    </sensor>
+    <dynamics damping="0.1" friction="0.1"/>
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="10000"
+      velocity="10" />
+  </joint>
+  <link
+    name="yqt_wheel">
+    <inertial>
+      <origin
+        xyz="-0 0.039 -0"
+        rpy="0 0 0" />
+      <mass
+        value="3.509" />
+      <inertia
+        ixx="0.013094099"
+        ixy="0"
+        ixz="0"
+        iyy="0.013976692"
+        iyz="0"
+        izz="0.013094099" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/yqt_wheel.STL" />
+        <!-- <cylinder radius="0.08" length="0.05"/> -->
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.89804 0.91765 0.92941 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://xingtian/meshes/meshes_s/yqt_wheel.STL" />
+        <!-- <cylinder radius="0.08" length="0.05"/> -->
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="yqt_joint1"
+    type="continuous">
+    <origin
+      xyz="0.0030126 0.029 -0.13997"
+      rpy="0 0 0" />
+    <parent
+      link="yqt_dianjizhou" />
+    <child
+      link="yqt_wheel" />
+    <axis
+      xyz="0 1 0" />
+    <sensor name="force_torque1" type="force_torque">
+        <always_on>true</always_on>
+        <update_rate>300</update_rate>
+    </sensor>
+  </joint>
+</robot>

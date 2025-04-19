@@ -1,0 +1,2 @@
+1、制定功能包编译
+catkin_make -DCATKIN_WHITELIST_PACKAGES="功能包名"

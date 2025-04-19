@@ -1,0 +1,293 @@
+/**********************************************************************
+ Copyright (c) 2020-2023, Unitree Robotics.Co.Ltd. All rights reserved.
+***********************************************************************/
+#include "FSM/State_Trotting.h"
+#include <iomanip>
+#define RESET   "\033[0m"   // 重置颜色
+#define RED     "\033[31m"  // 红色
+#define GREEN   "\033[32m"  // 绿色
+#define YELLOW  "\033[33m"  // 黄色
+#define BLUE    "\033[34m"  // 蓝色
+#define MAGENTA "\033[35m"  // 品红
+#define CYAN    "\033[36m"  // 青色
+#define WHITE   "\033[37m"  // 白色
+#define BOLD    "\033[1m"   // 加粗
+State_Trotting::State_Trotting(CtrlComponents *ctrlComp)
+             :FSMState(ctrlComp, FSMStateName::TROTTING, "trotting"), 
+              _est(ctrlComp->estimator), _phase(ctrlComp->phase), 
+              _contact(ctrlComp->contact), _robModel(ctrlComp->robotModel), 
+              _balCtrl(ctrlComp->balCtrl){
+                initRecv();
+    _gait = new GaitGenerator(ctrlComp);  //还没修改完
+
+    _gaitHeight = 0.05;       //世界坐标系下的步态高度
+
+    // _Kpp = Vec3(500, 0.1, 500).asDiagonal();     //用于机身平衡控制器
+    _Kpp =Vec3(81, 0.1, 180).asDiagonal();
+
+    _Kdp = Vec3(0.1, 0.1, 1.2).asDiagonal();
+    _kpw = 150; 
+    _Kdw = Vec3(10, 10, 0).asDiagonal();
+    _KpSwing = Vec3(120, 0.1, 120).asDiagonal();   //摆动腿足端修正力参数
+    _KdSwing = Vec3(1.2, 0.1, 1.2).asDiagonal();
+
+
+    _vxLim = _robModel->getRobVelLimitX();     //获取机器人的x速度限制
+    _vyLim = _robModel->getRobVelLimitY();       //获取机器人的y速度限制
+    _wyawLim = _robModel->getRobVelLimitYaw();   //获取机器人的yaw速度限制
+
+}
+
+State_Trotting::~State_Trotting(){
+    delete _gait;
+}
+
+void State_Trotting::enter(){
+    // std::cout << "State_Trotting::enter()" << std::endl;
+    _pcd = _est->getPosition();
+    _pcd(2) = -_robModel->getFeetPosIdeal()(2, 0);   //中性落足点位置，世界坐标系下左前腿的高！！
+    // std::cout << "State_Trotting:_pcb:" << _pcd<< std::endl;
+    _vCmdBody.setZero();
+    _yawCmd = _lowState->getYaw();
+    _Rd = rotz(_yawCmd);
+    _wCmdGlobal.setZero();
+
+    _ctrlComp->ioInter->zeroCmdPanel();
+    _gait->restart();
+}
+
+void State_Trotting::exit(){
+    _ctrlComp->ioInter->zeroCmdPanel();
+    _ctrlComp->setAllSwing();
+}
+
+
+
+void State_Trotting::run(){
+
+    _posBody = _est->getPosition();   //获取机身位置
+    // std::cout << "posbody_1: "<< _posBody << std::endl;
+    _velBody = _est->getVelocity();   //获取机身速度
+    _posFeet2BGlobal = _est->getPosFeet2BGlobal();  //获取足部在相对于机体的位置世界坐标系下,
+    // std::cout << "posFeet2BGlobal: " << _posFeet2BGlobal << std::endl;
+    _posFeetGlobal  = _est->getFeetPos();          //获取足部在世界坐标系下的位置
+    _velFeetGlobal = _est->getFeetVel();           //获取足部在世界坐标系下的速度
+    _B2G_RotMat = _lowState->getRotMat();         //获取机体到世界坐标系的旋转矩阵，这个不可能有问题！！
+    _G2B_RotMat = _B2G_RotMat.transpose();          //获取世界坐标系到机体的旋转矩阵
+    _yaw = _lowState->getYaw();                    //获取机身yaw角
+    _dYaw = _lowState->getDYaw();                   //获取机身yaw角速度
+
+    _userValue = _lowState->userValue;
+
+    getUserCmd();
+
+    calcCmd();
+    //步态高度，这里是个定值  魔改下边这两个函数！！
+    // _gait->setGait(_vCmdGlobal.segment(0,2), _wCmdGlobal(2), _gaitHeight);  
+    // //运行步态
+    // // std::cout << "posbody: "<< _posBody << std::endl;
+    // _gait->run(_posFeetGlobalGoal, _velFeetGlobalGoal);   //这两个是只获取
+    // // std::cout << "gaitHeight: " << _gaitHeight << std::endl;
+    
+    //这里是魔改之后的
+    _gait->setGait(_vCmdBody.segment(0,2), _wCmdBody(2), _gaitHeight);
+    _gait->run(_posFeet2BGoal, _velFeet2BGoal);   //这两个是机身坐标下的位置和速度
+   
+    calcTau();
+    calcQQd();   //计算关节角速度
+
+    if(checkStepOrNot()){
+        _ctrlComp->setStartWave();
+    }else{
+        _ctrlComp->setAllStance();
+    }
+
+
+   
+
+    _lowCmd->setTau(_tau_forward);    //满足扭矩的限制
+    // std::cout << BLUE << "tau: " << _tau  << std::endl;
+    _lowCmd->setQ(vec34ToVec12(_qGoal));
+  
+    // std::cout << BLUE << "_qGoal: " << _qGoal  << std::endl;
+    _lowCmd->setQd(vec34ToVec12(_qdGoal));
+
+    // std::cout << BLUE << "_qdGoal: " << _qdGoal <<RESET << std::endl;
+    for(int i(0); i<4; ++i){
+        if((*_contact)(i) == 0){
+            _lowCmd->setSwingGain(i);
+            _lowCmd->setWheelStopGain(i);
+        std::cout << RED << "摆动腿" << RESET << std::endl;
+        }else{
+            _lowCmd->setStableTrotGain(i);
+            _lowCmd->setWheelStopGain(i);
+            std::cout << YELLOW << "站立腿" << RESET << std::endl;
+        }
+    }
+}
+
+
+
+void State_Trotting::getUserCmd(){
+    /* Movement */
+    _vCmdBody(0) =  invNormalize(_userValue.ly, _vxLim(0), _vxLim(1));   //x方向速度，归一化到-1，1
+    _vCmdBody(1) = -invNormalize(_userValue.lx, _vyLim(0), _vyLim(1));    //y方向速度
+    _vCmdBody(2) = 0;
+    // std::cout << "vcmd_body: " << _vCmdBody << std::endl;
+    /* Turning */
+    // _dYawCmd = -invNormalize(_userValue.rx, _wyawLim(0), _wyawLim(1));   //yaw角速度
+    // _dYawCmd = 0.9*_dYawCmdPast + (1-0.9) * _dYawCmd;
+    _wCmdBody.setZero();
+    _dYawCmd = 0.0;
+    _dYawCmdPast = _dYawCmd;
+    // std::cout << "vx: " << _vCmdBody(0) << " vy: " << _vCmdBody(1) << " wyaw: " << _dYawCmd << std::endl;
+}
+//计算目标速度和偏航角
+void State_Trotting::calcCmd(){    
+    /* Movement */
+    _vCmdGlobal = _B2G_RotMat * _vCmdBody;
+    // std::cout << "vel_body: " << _velBody << std::endl;
+    // std::cout << "vel_global: " << _vCmdGlobal << std::endl;
+    _vCmdGlobal(0) = saturation(_vCmdGlobal(0), Vec2(_velBody(0)-0.2, _velBody(0)+0.2));  //机身x方向速度
+    _vCmdGlobal(1) = saturation(_vCmdGlobal(1), Vec2(_velBody(1)-0.2, _velBody(1)+0.2));
+    _vCmdGlobal(2) = 0;  
+    // std::cout << "vcmd_global: " << _vCmdGlobal << std::endl;
+    //pcd 目标位置,世界坐标系下重心位置，最大偏差限制在正负0.05m
+    _pcd(0) = saturation(_pcd(0) + _vCmdGlobal(0) * _ctrlComp->dt, Vec2(_posBody(0) - 0.05, _posBody(0) + 0.05));
+    // _pcd(1) = saturation(_pcd(1) + _vCmdGlobal(1) * _ctrlComp->dt, Vec2(_posBody(1) - 0.01, _posBody(1) + 0.01));
+    // _pcd(2) = saturation(_pcd(2) + _vCmdGlobal(2) * _ctrlComp->dt, Vec2(_posBody(2) - 0.1, _posBody(2) + 0.1));
+    // _vCmdGlobal(2) = 0;
+    // std::cout << "pcd—2: " << _pcd(0) << " " << _pcd(1) << std::endl;
+    // std::cout << "vel: " << _vCmdGlobal(0) << " " << _vCmdGlobal(1) << std::endl;
+    /* Turning */
+    // _yawCmd = _yawCmd + _dYawCmd * _ctrlComp->dt;
+    
+    _Rd = rpyToRotMat(0, 0, _yawCmd)*_Rd;
+    // _Rd = rotz(_yawCmd);
+    _wCmdGlobal(2) = _dYawCmd;
+    // std::cout << "yawCmd:" << _yawCmd << std::endl;
+}
+
+void State_Trotting::calcTau(){      //站立相的控制方法
+
+    _posError = _pcd - _posBody;        //世界坐标系下的机身位置误差
+    
+
+    _velError = _vCmdGlobal - _velBody;  //机身速度误差
+
+    _ddPcd = _Kpp * _posError + _Kdp * _velError;   //期望的重心位置
+    // _dWbd  = _kpw*rotMatToExp(_Rd*_G2B_RotMat) + _Kdw * (_wCmdGlobal - _lowState->getGyroGlobal());
+    _dWbd  = _kpw*rotMatToExp(_Rd*_G2B_RotMat) + _Kdw * (Vec3(0,0,0) - _lowState->getGyroGlobal());
+    // _ddPcd(0) = saturation(_ddPcd(0), Vec2(-0.1, 0.1));
+    // _ddPcd(2) = saturation(_ddPcd(2), Vec2(-1.5,1.5));
+    // _dWbd(0) = saturation(_dWbd(0), Vec2(-0.1, 0.1));
+    // _dWbd(1) = saturation(_dWbd(1), Vec2(-0.1, 0.1));
+    // _dWbd(2) = saturation(_dWbd(2), Vec2(-0.5, 0.5));
+    // _dWbd(0) = 0;
+    // _dWbd(1) = 0;
+    _dWbd(2) = 0;
+    // std::cout << "ddPcd: " << _ddPcd << std::endl;
+
+    // std::cout << "dwbd: " << _dWbd << std::endl;
+
+    _forceFeetGlobal = _balCtrl->calF(_ddPcd, _dWbd, _B2G_RotMat, _posFeet2BGlobal, *_contact);    //世界坐标下计算的足端力
+    
+    for(int i(0); i<4; ++i){   //摆动相
+        if((*_contact)(i) == 0){
+            _forceFeetGlobal.col(i) = _KpSwing*(_posFeetGlobalGoal.col(i) - _posFeetGlobal.col(i)) + _KdSwing*(_velFeetGlobalGoal.col(i)-_velFeetGlobal.col(i));
+            // _forceFeetGlobal.col(i) = Vec3::Zero();
+        }
+    }
+    // std::cout << "forceFeetGlobal: " << _forceFeetGlobal << std::endl;
+    _forceFeetBody = _G2B_RotMat * _forceFeetGlobal;
+    // std::cout << "forceFeetBody: " << _forceFeetBody << std::endl;
+ 
+    _q = vec34ToVec12(_lowState->getQ());
+    _qd = vec34ToVec12(_lowState->getQd());
+    _tau = _robModel->getTau(_q, _forceFeetBody);   //计算关节力矩,将车轮扭矩的力矩设置为0
+    // std::cout << "tau_: " << _tau << std::endl;
+    _tau_forward = vec34ToVec12(_robModel->calcJointTorqueForceTotal(vec12ToVec34(_q),vec12ToVec34(_qd),_qddGoal,vec12ToVec34(_tau)));
+    // std::cout << "tau_forward: " << _tau_forward << std::endl;
+}
+
+void State_Trotting::calcQQd(){
+
+    Vec34 _posFeet2B;
+    _posFeet2B = _robModel->getFeet2BPositions(*_lowState,FrameType::BODY); //获取足端在机身坐标系下的位置,实时计算的,这个是非常准的！！
+
+
+    for(int i(0); i<4; ++i){
+        _posFeet2BGoal.col(i) = _G2B_RotMat * (_posFeetGlobalGoal.col(i) - _posBody);  //机身坐标系下足端位置。这个是错误的！！
+        _velFeet2BGoal.col(i) = _G2B_RotMat * (_velFeetGlobalGoal.col(i) - _velBody);     
+        // std::cout<<"posFeet2BGoal: "<< _posFeetGlobalGoal.col(i) << std::endl;
+    }
+
+    if(_vCmdBody(0) == 0.00)
+    {
+        _posFeet2BGoal = _robModel->getFeetPosIdeal();
+        _velFeet2BGoal.setZero();
+    }
+    // _velFeet2BGoal.setZero();
+    //  = _posFeet2B;
+    std::cout << "posFeet2BGoal: " << _posFeet2BGoal << std::endl;
+    _qGoal = vec12ToVec34(_robModel->getQ(_posFeet2BGoal, FrameType::BODY));   //计算目标关节位置
+    for (int i(0); i<4; ++i)   //车轮的位置
+    {    
+        _qGoal.col(i)(2) = _lowState->getQ().col(i)(2);
+    }
+    std::cout << "_velFeet2BGoal: " << _velFeet2BGoal << std::endl;
+
+    _qdGoal = vec12ToVec34(_robModel->getQd(_posFeet2B, _velFeet2BGoal,*_lowState, FrameType::BODY)); //获取期望关节速度
+    //车轮的qdGoal应该是0
+     for (int i(0); i<4; ++i)   //车轮的位置
+    {    
+        _qdGoal.col(i)(2) = 0;
+    }
+}
+bool State_Trotting::checkStepOrNot(){
+    if( (fabs(_vCmdBody(0)) > 0.00) ||
+        (fabs(_vCmdBody(1)) > 10) ||
+        (fabs(_posError(0)) > 0.10) ||
+        (fabs(_posError(1)) > 1000) ||
+        (fabs(_velError(0)) > 0.2) ||
+        (fabs(_velError(1)) > 100) ||
+        (fabs(_dYawCmd) > 1.2) ){
+        return true;
+        // return false;
+    }else{
+        return false;
+    }
+}
+
+void State_Trotting::setHighCmd(double vx, double vy, double wz){
+    _vCmdBody(0) = vx;
+    _vCmdBody(1) = vy;
+    _vCmdBody(2) = 0; 
+    _dYawCmd = wz;
+}
+FSMStateName State_Trotting::checkChange(){
+    if(_lowState->userCmd == UserCommand::L2_B){
+        return FSMStateName::PASSIVE;
+    }
+    else if(_lowState->userCmd == UserCommand::L2_A){
+        return FSMStateName::FIXEDSTAND;
+    }
+    else{
+        return FSMStateName::TROTTING;
+    }
+}
+
+void State_Trotting::PD_Callback(const std_msgs::Float32MultiArray& msg){
+        _Kp = msg.data[0];
+        _Kd = msg.data[1];
+        _Kp_ = msg.data[2];
+        _Kd_ = msg.data[3];
+    
+        _Kpp(0,0) =  msg.data[0];
+        _Kdp(0,0) =  msg.data[1];
+        
+    }
+    
+void State_Trotting::initRecv(){    //订阅速度指令
+        _PD_Sub = _nm.subscribe("/xingtian/PD_params", 1, &State_Trotting::PD_Callback, this);
+    }

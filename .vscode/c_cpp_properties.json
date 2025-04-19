@@ -1,0 +1,26 @@
+{
+    "configurations": [
+        {
+            "browse": {
+                "databaseFilename": "${default}",
+                "limitSymbolsToIncludedHeaders": false
+            },
+            "includePath": [
+                "/opt/ros/noetic/include/**",
+                "/usr/include/**",
+                "/zyz/home/workspace/demo_xingtian_ws_dynamic/devel/include/**",
+                "/zyz/home/workspace/demo_xingtian_ws_dynamic/src/xingtian_dynamics/src/**",
+                "${workspaceFolder}/src/xingtian_dynamics/include/**",
+                "${workspaceFolder}/src/xingtian_dynamics/**/**/**/**",
+                "${workspaceFolder}/src/xingtian_dynamics/devel/include/**",
+                "${workspaceFolder}/src/xingtian_dynamics/include"
+            ],
+            "name": "ROS",
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "/usr/bin/g++",
+            "cStandard": "gnu11",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 4
+}
