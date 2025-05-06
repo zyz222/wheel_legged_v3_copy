@@ -66,7 +66,7 @@ private:
     Mat3<T> _KpSwing, _KdSwing;
     Vec2<T> _vxLim, _vyLim, _wyawLim;
     Vec4<T> *_phase;
-    VecInt4 *_contact;
+    Vec4<T> *_contact;
 
     ros::Subscriber _PD_Sub;
     ros::NodeHandle _nm;

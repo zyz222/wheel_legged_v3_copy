@@ -50,5 +50,5 @@ FSMStateName State_Passive<T>::checkChange(){
         return FSMStateName::PASSIVE;
     }
 }
-template class State_Passive<double>;
-// template class State_Passive<float>;
+// template class State_Passive<double>;
+template class State_Passive<float>;

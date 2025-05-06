@@ -42,7 +42,7 @@ void GaitGenerator<T>::run(Vec34<T> &feetPos, Vec34<T> &feetVel){
             if((*_phase)(i) < 0.5){                   //stance
                 // _startP.col(i) = _est->cheater_getFootPos(i);    //获取开始时的足端位置,站立相位
                 _startP.col(i) = _robModel->getFootPosition(*_lowState,i,FrameType::BODY);//获取开始时的足端位置,站立相位.机身坐标系下 XYZ
-                // feetVel.col(i) = _robModel->cheater_getFootVelocity(*_lowState,i);    //这个相对于髋关节的速度，也可是说是相对于机身坐标系 XYZ
+                // feetVel.col(i) = _robModel->getFootVelocity(*_lowState,i);    //这个相对于髋关节的速度，也可是说是相对于机身坐标系 XYZ
                 // _startP.col(i)(2) = -0.22;
             }
             feetPos.col(i) = _startP.col(i);   //这个也没问题
@@ -107,4 +107,5 @@ T GaitGenerator<T>::cycloidZVelocity(T h, T phase){
     T phasePI = 2 * M_PI * phase;
     return h*M_PI * sin(phasePI) / _waveG->getTswing();
 }
-template class GaitGenerator<double>;
+// template class GaitGenerator<double>;
+template class GaitGenerator<float>;

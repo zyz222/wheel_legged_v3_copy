@@ -104,5 +104,5 @@ void* KeyBoard<T>::run(void *arg){
     }
     return NULL;
 }
-template class KeyBoard<double>;
-// template class KeyBoard<float>;
+// template class KeyBoard<double>;
+template class KeyBoard<float>;

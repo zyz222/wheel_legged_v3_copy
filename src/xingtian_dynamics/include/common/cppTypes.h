@@ -70,7 +70,7 @@ template <typename T>
 using Mat3 = typename Eigen::Matrix<T, 3, 3>;
 
 // 3x3 Identity Matrix
-#define _I3 Eigen::MatrixXd::Identity(3, 3)
+#define _I3 Eigen::MatrixXf::Identity(3, 3)
 //2*2 matrix
 
 // template <typename T>
@@ -139,10 +139,10 @@ template <typename T>
 using MassProperties = typename Eigen::Matrix<T, 10, 1>;
 
 // 12x12 Identity Matrix
-#define I12 Eigen::MatrixXd::Identity(12, 12)
+#define I12 Eigen::MatrixXf::Identity(12, 12)
 
 // 18x18 Identity Matrix
-#define I18 Eigen::MatrixXd::Identity(18, 18)
+#define I18 Eigen::MatrixXf::Identity(18, 18)
 
 // Dynamically sized vector
 template <typename T>

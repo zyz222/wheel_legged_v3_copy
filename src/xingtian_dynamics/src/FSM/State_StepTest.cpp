@@ -88,5 +88,5 @@ void State_StepTest<T>::calcTau(){
     _tau = _robModel->getTau(_q, _forceFeetBody);
    
 }
-template class State_StepTest<double>;
-// template class State_StepTest<float>;
+// template class State_StepTest<double>;
+template class State_StepTest<float>;

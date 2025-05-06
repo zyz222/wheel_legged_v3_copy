@@ -9,7 +9,7 @@ FSMState<T>::FSMState(CtrlComponents<T> *ctrlComp, FSMStateName stateName, std::
     _lowCmd = _ctrlComp->lowCmd;
     _lowState = _ctrlComp->lowState;
 }
-template class FSMState<double>;
-// template class FSMState<float>;
+// template class FSMState<double>;
+template class FSMState<float>;
 
 

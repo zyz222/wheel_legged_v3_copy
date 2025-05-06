@@ -131,5 +131,5 @@ bool FSM<T>::checkSafty(){
         return true;
     }
 }
-template class FSM<double>;
-// template class FSM<float>;
+// template class FSM<double>;
+template class FSM<float>;

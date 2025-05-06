@@ -26,7 +26,7 @@ private:
     QuadrupedRobot<T> *_robModel;
     BalanceCtrl<T> *_balCtrl;
 
-    VecInt4 *_contact;
+    Vec4<T> *_contact;
     Vec4<T> *_phase;
 
     RotMat<T> _Rd;

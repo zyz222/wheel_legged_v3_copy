@@ -39,7 +39,7 @@ private:
 
     BalanceCtrl<T> *_balCtrl;
 
-    VecInt4 *_contact;
+    Vec4<T> *_contact;
 
     RotMat<T> _Rd, _RdInit;      //_RdInit is the initial rotation matrix of the world frame
     Vec3<T> _pcd, _pcdInit;
@@ -48,7 +48,7 @@ private:
     Vec3<T> _ddPcd, _dWbd;
 
     Vec12<T> _q,_dq,_tau;
-    Vec12<T> __q;
+    Vec12<float> __q;
     Vec3<T> _posBody, _velBody;
     RotMat<T> _B2G_RotMat, _G2B_RotMat;
     Vec34<T> _posFeet2BGlobal;
@@ -61,7 +61,7 @@ private:
 
     Vec34<T> _q_Dynamic,_dq_Dynamic,_ddq_Dynamic,tau_Dynamic;  //逆动力学计算的扭矩
     Vec12<T> _tau_forward;     //最终发送的扭矩
-    Vec12<T> __tau_forward;     //最终发送的扭矩   test用
+    Vec12<float> __tau_forward;     //最终发送的扭矩   test用
 };
 
 #endif  // BALANCETEST_H

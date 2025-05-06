@@ -221,13 +221,13 @@ void State_BalanceTest<T>::BalanceStandStep() {      //平衡站立的核心控�
         _wbc_data->contact_state[i] = true;                                               //初始化足端接触状态为接触
         }
     
-    if(last_height_command - _wbc_data->pBody_des[2] > 0.001) {                       ///如果当前高度减去期望的机身高度大于0.001，则当前高度减去0.001  
-        _wbc_data->pBody_des[2] = last_height_command - 0.001;
-    }
+    // if(last_height_command - _wbc_data->pBody_des[2] > 0.001) {                       ///如果当前高度减去期望的机身高度大于0.001，则当前高度减去0.001  
+    //     _wbc_data->pBody_des[2] = last_height_command - 0.001;
+    // }
     
     last_height_command = _wbc_data->pBody_des[2];                               //每次都降低一点点！！                   
 
     _wbc_ctrl->run(_wbc_data, *this->_ctrlComp);                                          //运行WBC
 }
-template class State_BalanceTest<double>;
-// template class State_BalanceTest<float>;
+// template class State_BalanceTest<double>;
+template class State_BalanceTest<float>;

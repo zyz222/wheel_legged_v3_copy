@@ -118,6 +118,11 @@ void IOROS<T>::sendCmd(const LowlevelCmd<T> *lowCmd){
         {msg.data = MAX_VALUE;}
         else if(msg.data < MIN_VALUE)
         {msg.data = MIN_VALUE;}
+        else if(std::isnan(msg.data))
+        {
+            ROS_ERROR("Nan value detected in motorCmd[%d].tau", m);
+            msg.data = 0.0;
+        }
         // msg.data = 0.0;
         _servo_pub[m].publish(msg);
 
@@ -540,10 +545,5 @@ void IOROS<T>::RRhipCallback(const geometry_msgs::WrenchStamped::ConstPtr& msg)
     _lowState.motorState[6].tauEst = -(msg->wrench.torque.y*0.9 + (msg->wrench.torque.x)*0.05 +(msg->wrench.torque.z)*0.05);
 } 
 
-template class IOROS<double>;
-// template class IOROS<float>;
-// int main(int argc, char **argv) 
-// {
-
-//     return 0;
-// }
+// template class IOROS<double>;
+template class IOROS<float>;

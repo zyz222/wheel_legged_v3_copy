@@ -149,8 +149,8 @@ FSMStateName State_FixedStand<T>::checkChange(){
         return FSMStateName::FIXEDSTAND;
     }
 }
-template class State_FixedStand<double>;
-// template class State_FixedStand<float>;
+// template class State_FixedStand<double>;
+template class State_FixedStand<float>;
 
 
 // void State_FixedStand::PD_Callback(const std_msgs::Float32MultiArray& msg){

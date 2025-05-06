@@ -114,8 +114,8 @@ void State_FreeStand<T>::_calcCmd(Vec34<T> vecOP){
 
     this->_lowCmd->setQ(q);              //只有前两行的角度是hip和knee,而忽略了第三行wheel
 }
-template class State_FreeStand<double>;
-// template class State_FreeStand<float>;
+// template class State_FreeStand<double>;
+template class State_FreeStand<float>;
 // void State_FreeStand::PD_Callback(const std_msgs::Float32MultiArray& msg){
 //         _Kp = msg.data[0];
 //         _Kd = msg.data[1];

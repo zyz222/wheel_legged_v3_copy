@@ -92,7 +92,12 @@
         "slist": "cpp",
         "scoped_allocator": "cpp",
         "valarray": "cpp",
-        "netfwd": "cpp"
+        "netfwd": "cpp",
+        "matrixfunctions": "cpp",
+        "sparsecore": "cpp",
+        "numericaldiff": "cpp",
+        "specialfunctions": "cpp",
+        "cassert": "cpp"
     },
     "C_Cpp.default.compilerPath": "/usr/bin/g++"
     // settings.json

@@ -26,5 +26,5 @@ template <typename T>
 void LPFilter<T>::clear(){
     _start = false;
 }
-template class LPFilter<double>;
-// template class LPFilter<float>;
+// template class LPFilter<double>;
+template class LPFilter<float>;

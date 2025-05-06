@@ -52,12 +52,9 @@ class DesiredStateCommand {
 public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   // Initialize with the GamepadCommand struct    KeyBoard里边是包含了指令和数值
-  DesiredStateCommand(CmdPanel* command, rc_control_settings* rc_command,
-                      Estimator<T>* sEstimate, T _dt) :cmdPanel(command), rcCommand(rc_command), stateEstimate(sEstimate) 
+  DesiredStateCommand(CmdPanel* command, rc_control_settings* rc_command, T _dt) :cmdPanel(command), rcCommand(rc_command)
                       {
-    // cmdPanel = command;
-    // rcCommand = rc_command;
-    // stateEstimate = sEstimate;
+ 
     data.stateDes.setZero();
     
     data.pre_stateDes.setZero();
@@ -103,7 +100,7 @@ public:
   // bool trigger_pressed = false;      //触发器 
 
 private:
-  Estimator<T>* stateEstimate;       //状态估计 
+  // Estimator<T>* stateEstimate;       //状态估计 
   // Dynamics matrix for discrete time approximation  离散时间近似的动力学矩阵
   Mat12<T> A;    
   // DesiredStateData<T> data;   

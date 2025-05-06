@@ -103,5 +103,5 @@ void State_SwingTest<T>::_torqueCtrl(){
 
     this->_lowCmd->setTau(torque);
 }
-template class State_SwingTest<double>;
-// template class State_SwingTest<float>;
+// template class State_SwingTest<double>;
+template class State_SwingTest<float>;

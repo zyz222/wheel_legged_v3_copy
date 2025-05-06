@@ -92,7 +92,7 @@ void WBC_Ctrl<T>::run(void* input, CtrlComponents<T> & _ctrlComp){              
 
 template<typename T>
 void WBC_Ctrl<T>::_UpdateLegCMD(CtrlComponents<T> & _ctrlComp){            //data控制状态机数据
-  LegControllerCommand<T> *cmd = _ctrlComp.lowCmd->commands;       //更新腿部控制器命令，腿部控制器命令指针
+  LegControllerCommand<float> *cmd = _ctrlComp.lowCmd->commands;       //更新腿部控制器命令，腿部控制器命令指针
   //Vec4<T> contact = _ctrlComp._stateEstimator->getResult().contactEstimate;
 
   for (size_t leg(0); leg < xingtian::num_leg; ++leg) {                    //4个腿
@@ -159,5 +159,5 @@ void WBC_Ctrl<T>::_UpdateModel(Estimator<T> & state_est,       //更新WBC控制
 }
 
 
-// template class WBC_Ctrl<float>;
-template class WBC_Ctrl<double>;
+template class WBC_Ctrl<float>;
+// template class WBC_Ctrl<double>;

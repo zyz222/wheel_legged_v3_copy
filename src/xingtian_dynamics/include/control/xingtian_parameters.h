@@ -16,7 +16,7 @@ public:
 
 
 };
-template class XingtianParameters<double>;
+// template class XingtianParameters<double>;
 template class XingtianParameters<float>;
 
 

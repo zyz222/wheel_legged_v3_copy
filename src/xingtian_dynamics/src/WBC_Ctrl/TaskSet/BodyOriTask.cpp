@@ -89,4 +89,4 @@ bool BodyOriTask<T>::_UpdateTaskJDotQdot() {                 //为0，不考虑�
 }
 
 template class BodyOriTask<double>;
-// template class BodyOriTask<float>;
+template class BodyOriTask<float>;

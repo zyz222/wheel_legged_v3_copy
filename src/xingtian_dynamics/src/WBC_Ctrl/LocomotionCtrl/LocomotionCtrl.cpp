@@ -102,6 +102,6 @@ void LocomotionCtrl<T>::_CleanUp(){
   WBCtrl::_contact_list.clear();
   WBCtrl::_task_list.clear();
 }
-template class LocomotionCtrl<double>;
-// template class LocomotionCtrl<float>;
+// template class LocomotionCtrl<double>;
+template class LocomotionCtrl<float>;
 

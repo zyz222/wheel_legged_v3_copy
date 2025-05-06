@@ -51,7 +51,7 @@ WaveGenerator<T>::~WaveGenerator()
 // 目前是根据是否摆动和站立的情况来计算的摆动相
 // 利用上一时刻的状态来判断是否需要平滑过渡，最终返回当前的状态！
 template <typename T>
-void WaveGenerator<T>::calcContactPhase(Vec4<T> &phaseResult, VecInt4 &contactResult, WaveStatus status)
+void WaveGenerator<T>::calcContactPhase(Vec4<T> &phaseResult, Vec4<T> &contactResult, WaveStatus status)
 {
 
     calcWave(_phase, _contact, status);   //相位、接触状态、步态状态，计算当前的！！！
@@ -117,7 +117,7 @@ T WaveGenerator<T>::getT()
 }
 //根据当前时间和状态计算步态相位和接触状态，在这里更改了相位接触状态，后续是需要修改的！！！！
 template <typename T>
-void WaveGenerator<T>::calcWave(Vec4<T> &phase, VecInt4 &contact, WaveStatus status)
+void WaveGenerator<T>::calcWave(Vec4<T> &phase, Vec4<T> &contact, WaveStatus status)
 {
     if (status == WaveStatus::WAVE_ALL)   //波动
     {
@@ -154,5 +154,5 @@ void WaveGenerator<T>::calcWave(Vec4<T> &phase, VecInt4 &contact, WaveStatus sta
         phase << 0.5, 0.5, 0.5, 0.5;
     }
 }
-// template class WaveGenerator<float>;
-template class WaveGenerator<double>;
+template class WaveGenerator<float>;
+// template class WaveGenerator<double>;

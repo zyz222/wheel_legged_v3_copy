@@ -19,12 +19,12 @@ class KeyBoard : public CmdPanel{
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     KeyBoard();
-    Vec2<double> getLeftStickAnalog() const override { return leftStickAnalog; }
+    Vec2<float> getLeftStickAnalog() const override { return leftStickAnalog; }
     // Vec2<T> getLeftStickAnalog() const { }
     // 返回副本
     // Vec2<T> getRightStickAnalog() const { }
-    Vec2<double> getRightStickAnalog() const override { return rightStickAnalog; }
-    double getHeight() const override { return height; }
+    Vec2<float> getRightStickAnalog() const override { return rightStickAnalog; }
+    float getHeight() const override { return height; }
     // T getHeight() const {}
     ~KeyBoard();
 private:

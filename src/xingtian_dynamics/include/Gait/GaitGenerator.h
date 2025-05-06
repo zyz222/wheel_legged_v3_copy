@@ -38,7 +38,7 @@ private:
     Vec2<T> _vxyGoal;
     T _dYawGoal;
     Vec4<T> *_phase, _phasePast;
-    VecInt4 *_contact;
+    Vec4<T> *_contact;
     Vec34<T> _startP, _endP, _idealP, _pastP;
     bool _firstRun;
 

@@ -10,5 +10,5 @@ template <typename T>
 void ControlFrame<T>::run(){
     _FSMController->run();
 }
-template class ControlFrame<double>;
-// template class ControlFrame<float>;
+// template class ControlFrame<double>;
+template class ControlFrame<float>;

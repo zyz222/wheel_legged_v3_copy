@@ -45,20 +45,20 @@ int main(int argc, char **argv) {
     /* set the print format */
     std::cout << std::fixed << std::setprecision(3);
 
-    IOInterface<double> *ioInter;
+    IOInterface<float> *ioInter;
     CtrlPlatform ctrlPlat;
 
-    ioInter = new IOROS<double>();
+    ioInter = new IOROS<float>();
     ctrlPlat = CtrlPlatform::GAZEBO;
 
-    CtrlComponents<double> *ctrlComp = new CtrlComponents<double>(ioInter);  //控制部件
+    CtrlComponents<float> *ctrlComp = new CtrlComponents<float>(ioInter);  //控制部件
     ctrlComp->ctrlPlatform = ctrlPlat;
     ctrlComp->dt = 0.002; // run at 500hz
     ctrlComp->running = &running;
     
-    ctrlComp->robotModel = new xingtianRobot<double>();
+    ctrlComp->robotModel = new xingtianRobot<float>();
 
-    ctrlComp->waveGen = new WaveGenerator<double>(0.35, 0.5, Vec4<double>(0.5, 0, 0.5, 0)); // Trot  RF LF RR LR
+    ctrlComp->waveGen = new WaveGenerator<float>(0.45, 0.5, Vec4<float>(0.5, 0, 0.5, 0)); // Trot  RF LF RR LR
     // ctrlComp->waveGen = new WaveGenerator(0.45, 0.5, Vec4(0.5, 0, 0, 0)); //
     // ctrlComp->waveGen = new WaveGenerator(0.5, 0.5, Vec4(0, 0, 0, 0)); // Trot
     // ctrlComp->waveGen = new WaveGenerator(1.1, 0.75, Vec4(0, 0.25, 0.5, 0.75));  //Crawl, only for sim
@@ -67,19 +67,9 @@ int main(int argc, char **argv) {
     // ctrlComp->waveGen = new WaveGenerator(0.4, 0.7, Vec4(0, 0, 0, 0));  //Pronk, only for sim
     ctrlComp->geneObj();
  
-    // DesiredStateCommand<double> *_desiredStateCommand =new DesiredStateCommand<double>(_keyboard,_rc_control,ctrlComp->estimator,ctrlComp->dt);
-    // auto _desiredStateCommand = std::make_shared<DesiredStateCommand<double>>(
-    //     _keyboard, _rc_control, ctrlComp->estimator, ctrlComp->dt
-    // );
-    // ctrlComp->initDesiredStateCommand(_desiredStateCommand.get()); // 传递裸指针
-   
+    
 
-    // dynamic_cast<IOROS<double>*>(ioInter)->setDesiredStateCommand(_desiredStateCommand.get());
-
-    // ctrlComp->initDesiredStateCommand(_desiredStateCommand);
-
-
-    ControlFrame<double> ctrlFrame(ctrlComp);
+    ControlFrame<float> ctrlFrame(ctrlComp);
 
     signal(SIGINT, ShutDown);
 
@@ -89,9 +79,7 @@ int main(int argc, char **argv) {
     }
 
     delete ctrlComp;
-    // delete _keyboard;
-    // delete _desiredStateCommand;
-    // delete _rc_control;
+ 
 
 
 #ifdef COMPILE_DEBUG_TEST

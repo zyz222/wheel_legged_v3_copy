@@ -63,7 +63,7 @@ public:
     Vec3<T> getFootVelocity(LowlevelState<T> &state, int id);
     Vec34<T> getFeet2BPositions(LowlevelState<T> &state, FrameType frame);
     Vec34<T> getFeet2BVelocities(LowlevelState<T> &state, FrameType frame);
-
+  
     // LowlevelState<T> *_LowState;
 
     Mat3<T> getJaco(LowlevelState<T> &state, int legID);

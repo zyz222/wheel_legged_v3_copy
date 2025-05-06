@@ -42,9 +42,9 @@ public:
     UserCommand getUserCmd()const {return userCmd;}
     UserValue getUserValue()const {return userValue;}
 
-    virtual Vec2<double> getLeftStickAnalog() const = 0;
-    virtual Vec2<double> getRightStickAnalog() const = 0;
-    virtual double getHeight() const = 0;
+    virtual Vec2<float> getLeftStickAnalog() const = 0;
+    virtual Vec2<float> getRightStickAnalog() const = 0;
+    virtual float getHeight() const = 0;
     
 
     void setPassive(){userCmd = UserCommand::L2_B;}

@@ -4,7 +4,7 @@ project(xingtian_dynamics VERSION 1.0.0)
 
 find_package(catkin REQUIRED)
 
-# find_package(osqp REQUIRED)  
+find_package(qpOASES REQUIRED)  
 # include_directories()
 # find_library(OSQP_LIBRARY osqp PATHS /usr/local/lib)
 # find_path(OSQP_INCLUDE_DIR osqp.h PATHS /usr/local/include/osqp)
@@ -18,6 +18,7 @@ include_directories(/usr/local/include)
 # 手动指定库路径并链接 OSQP
 # 增加src下的头文件
 include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/include/thirdParty)
 include_directories(${PROJECT_SOURCE_DIR}/include/WBC)
 # find_package(roslaunch)
 find_package(catkin REQUIRED COMPONENTS
@@ -71,8 +72,9 @@ link_directories(
 # add_executable(my_cpp_file src/main.cpp src/interface/sim_gazebo_ros.cpp)
 file(GLOB_RECURSE SRC_LIST
    "src/*/*.cpp"
-    "src/*/*.cc"
+    "src/*/*/*.cc"
     "src/*/*/*.cpp"
+    # "src/*/*/*.c"
 
 )
 add_executable(xingtian_dynamics
@@ -82,9 +84,11 @@ add_executable(xingtian_dynamics
 
 target_include_directories(xingtian_dynamics PRIVATE ${catkin_INCLUDE_DIRS})
 target_include_directories(xingtian_dynamics PRIVATE ${OSQP_INCLUDE_DIR})
-# target_link_libraries(xingtian_dynamics Eigen3::Eigen)
+
+target_link_libraries(xingtian_dynamics /usr/local/lib/libqpOASES.a)
 
 add_dependencies(xingtian_dynamics ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
 target_link_libraries(xingtian_dynamics ${catkin_LIBRARIES} ${EIGEN_LIBRARIES})
   
 # set_target_properties(xingtian_dynamics PROPERTIES COMPILE_FLAGS "-g")

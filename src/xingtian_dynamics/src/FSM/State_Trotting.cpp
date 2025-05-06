@@ -19,18 +19,19 @@ State_Trotting<T>::State_Trotting(CtrlComponents<T> *ctrlComp)
               _contact(ctrlComp->contact), _robModel(ctrlComp->robotModel), 
               _balCtrl(ctrlComp->balCtrl){
                 initRecv();
+    
     _gait = new GaitGenerator<T>(ctrlComp);  //还没修改完
 
-    _gaitHeight = 0.005;       //世界坐标系下的步态高度
+    _gaitHeight = 0.02;       //世界坐标系下的步态高度
 
     // _Kpp = Vec3(500, 0.1, 500).asDiagonal();     //用于机身平衡控制器
-    _Kpp =Vec3<T>(800, 800, 850).asDiagonal();
+    _Kpp =Vec3<T>(120, 50, 180).asDiagonal();
 
-    _Kdp = Vec3<T>(10, 10, 10).asDiagonal();
-    _kpw = 1000; 
-    _Kdw = Vec3<T>(10, 10, 10).asDiagonal();
-    _KpSwing = Vec3<T>(400, 400, 400).asDiagonal();   //摆动腿足端修正力参数
-    _KdSwing = Vec3<T>(12, 12, 12).asDiagonal();
+    _Kdp = Vec3<T>(10, 0.1, 1.2).asDiagonal();
+    _kpw = 150; 
+    _Kdw = Vec3<T>(10, 10, 0).asDiagonal();
+    _KpSwing = Vec3<T>(120, 0.1, 120).asDiagonal();   //摆动腿足端修正力参数
+    _KdSwing = Vec3<T>(1.2, 0.1, 1.2).asDiagonal();
 
 
     _vxLim = _robModel->getRobVelLimitX();     //获取机器人的x速度限制
@@ -94,7 +95,7 @@ void State_Trotting<T>::run(){
     
     //这里是魔改之后的
     // _gait->setGait(_vCmdGlobal.segment(0,2), _wCmdGlobal(2), _gaitHeight);
-    _gait->setGait(_vCmdBody.segment(0,2), _wCmdGlobal(2), _gaitHeight);
+    _gait->setGait(_vCmdBody.segment(0,2), _wCmdBody(2), _gaitHeight);
     _gait->run(_posFeet2BGoal, _velFeet2BGoal);   //这两个是机身坐标下的位置和速度
     // _gait->run(_posFeetGlobalGoal, _velFeetGlobalGoal); 
     calcTau();
@@ -138,6 +139,7 @@ void State_Trotting<T>::getUserCmd(){
     // _vCmdBody(1) = -invNormalize(this->_userValue.lx, _vyLim(0), _vyLim(1));    //y方向速度
     _vCmdBody(1) = 0;
     _vCmdBody(2) = 0;
+    _wCmdBody.setZero();
 
     // _dYawCmd = 0.0;
     _dYawCmd = -invNormalize(this->_userValue.rx, _wyawLim(0), _wyawLim(1));
@@ -152,15 +154,15 @@ void State_Trotting<T>::calcCmd(){
     _vCmdGlobal = _B2G_RotMat * _vCmdBody;
 
      //pcd 目标位置,世界坐标系下重心位置，最大偏差限制在正负0.05m
-    if(_vCmdBody(0) != 0 || _vCmdBody(1) != 0)
-    {
+    // if(_vCmdBody(0) != 0 || _vCmdBody(1) != 0)
+    // {
         _vCmdGlobal(0) = saturation(_vCmdGlobal(0), Vec2<T>(_velBody(0)-0.2, _velBody(0)+0.2));  //机身x方向速度
         _vCmdGlobal(1) = saturation(_vCmdGlobal(1), Vec2<T>(_velBody(1)-0.2, _velBody(1)+0.2));
         _vCmdGlobal(2) = 0;
-        // _pcd(0) = saturation(_pcd(0) + _vCmdGlobal(0) * this->_ctrlComp->dt, _posBody(0) - 0.25, _posBody(0) + 0.25);
+        _pcd(0) = saturation(_pcd(0) + _vCmdGlobal(0) * this->_ctrlComp->dt, _posBody(0) - 0.25, _posBody(0) + 0.25);
         // _pcd(1) = saturation(_pcd(1) + _vCmdGlobal(1) * this->_ctrlComp->dt, _posBody(1) - 0.05, _posBody(1) + 0.05);
         // _pcd(2) = saturation(_pcd(2) + _vCmdGlobal(2) * this->_ctrlComp->dt, _posBody(2) - 0.05, _posBody(2) + 0.05);
-    }
+    // }
 
     
     _Rd = rpyToRotMat<T>(0, 0, _yawCmd)*_Rd;
@@ -175,40 +177,50 @@ void State_Trotting<T>::calcTau(){      //站立相的控制方法
     _velError = _vCmdGlobal - _velBody;  //机身速度误差
     std::cout << YELLOW << "posError: " << _posError << std::endl;
     std::cout << RED << "velError: " << _velError << std::endl;
-    if(abs(_posError(0)) < 0.1)
-      {  _posError(0) = 0;}
-    
+    // if(abs(_posError(0)) < 0.1)
+    //   {  _posError(0) = 0;}
+    _posError(1) = 0;
+    _posError(0) = 0;
     _ddPcd = _Kpp * _posError + _Kdp * _velError;   //期望的重心位置
     // _dWbd  = _kpw*rotMatToExp(_Rd*_G2B_RotMat) + _Kdw * (_wCmdGlobal - this->_lowState->getGyroGlobal());
     _dWbd  = _kpw*rotMatToExp<T>(_Rd*_G2B_RotMat) + _Kdw * (Vec3<T>(0,0,0) - this->_lowState->getGyroGlobal());
     // _dWbd(2) = 0;
     
     // _ddPcd(0) = saturation(_ddPcd(0), Vec2<T>(-30, 30));
-    _ddPcd(1) = saturation(_ddPcd(1), Vec2<T>(-5, 5));
+    // _ddPcd(1) = saturation(_ddPcd(1), Vec2<T>(-1,1));
     // _ddPcd(2) = saturation(_ddPcd(2), Vec2<T>(-100, 100));
 
-    _dWbd(0) = saturation(_dWbd(0), Vec2<T>(-40, 40));
-    _dWbd(1) = saturation(_dWbd(1), Vec2<T>(-40, 40));
-    _dWbd(2) = saturation(_dWbd(2), Vec2<T>(-10, 10));
+    // _dWbd(0) = saturation(_dWbd(0), Vec2<T>(-40, 40));
+    // _dWbd(1) = saturation(_dWbd(1), Vec2<T>(-40, 40));
+    // _dWbd(2) = saturation(_dWbd(2), Vec2<T>(-0.1, 0.1));
+    _dWbd(2) = 0;
 
     _forceFeetGlobal = _balCtrl->calF(_ddPcd, _dWbd, _B2G_RotMat, _posFeet2BGlobal, *_contact);    //世界坐标下计算的足端力
     
     for(int i(0); i<4; ++i){   //摆动相   这个需要修改！！
         if((*_contact)(i) == 0){
-            // _forceFeetGlobal.col(i) = _KpSwing*(_posFeetGlobalGoal.col(i) - _posFeetGlobal.col(i)) + _KdSwing*(_velFeetGlobalGoal.col(i)-_velFeetGlobal.col(i));
-            _forceFeetGlobal.col(i) = Vec3<T>::Zero();
+            _forceFeetGlobal.col(i) = _KpSwing*(_B2G_RotMat*_posFeet2BGoal.col(i) - _posFeetGlobal.col(i)) + _KdSwing*(_B2G_RotMat*_velFeet2BGoal.col(i)-_velFeetGlobal.col(i));
+            // _forceFeetGlobal.col(i) = Vec3<T>::Zero();
         }
     }
     // std::cout << "forceFeetGlobal: " << _forceFeetGlobal << std::endl;
     for(int i(0); i<4; ++i)
     {
-        _forceFeetGlobal.col(i)(2) = saturation(_forceFeetGlobal.col(i)(2), Vec2<T>(-250, 250));
+        _forceFeetGlobal.col(i)(2) = saturation(_forceFeetGlobal.col(i)(2), Vec2<T>(-400, 400));
     }
     _forceFeetBody = _G2B_RotMat * _forceFeetGlobal;
     // std::cout << "forceFeetBody: " << _forceFeetBody << std::endl;
  
     _q = vec34ToVec12(this->_lowState->getQ());
     _qd = vec34ToVec12(this->_lowState->getQd());
+    for(int i = 0; i<12; ++i)
+    {
+        if(std::isnan(_q(i))|| std::isnan(_qd(i)))
+    {
+        ROS_ERROR("_q and _qd nan in State_Trotting");
+    }
+    }
+    
     _tau = _robModel->getTau(_q, _forceFeetBody);   //计算关节力矩,将车轮扭矩的力矩设置为0
     // std::cout << "tau_: " << _tau << std::endl;
     _tau_forward = vec34ToVec12(_robModel->calcJointTorqueForceTotal(vec12ToVec34(_q),vec12ToVec34(_qd),_qddGoal,vec12ToVec34(_tau)));
@@ -225,7 +237,9 @@ void State_Trotting<T>::calcQQd(){
     //     _velFeet2BGoal.col(i) = _G2B_RotMat * (_velFeetGlobalGoal.col(i) - _velBody);     
     //     // std::cout<<"posFeet2BGoal: "<< _posFeetGlobalGoal.col(i) << std::endl;
     // }
+    
     // if( _posError(0) < 0.1 && (_velError(0) < 0.05 || _vCmdBody(0) == 0.00))
+
     if( _vCmdBody(0) == 0.00)
     {
         _posFeet2BGoal = _robModel->getFeetPosIdeal();
@@ -251,12 +265,12 @@ void State_Trotting<T>::calcQQd(){
 template <typename T>
 bool State_Trotting<T>::checkStepOrNot(){
     if( (fabs(_vCmdBody(0)) > 0.00) ||
-        (fabs(_vCmdBody(1)) > 0.5) ||
-        (fabs(_posError(0)) > 0.2) ||
-        (fabs(_posError(1)) > 2.5) ||
+        (fabs(_vCmdBody(1)) > 1000) ||
+        (fabs(_posError(0)) > 10.2) ||
+        (fabs(_posError(1)) > 1000.5) ||
         (fabs(_velError(0)) > 0.5) ||
-        (fabs(_velError(1)) > 2.5) ||
-        (fabs(_dYawCmd) > 0.5) ){
+        (fabs(_velError(1)) > 1000) ||
+        (fabs(_dYawCmd) > 10.5) ){
         return true;
         // return false;
     }else{
@@ -298,5 +312,5 @@ template <typename T>
 void State_Trotting<T>::initRecv(){    //订阅速度指令
         _PD_Sub = _nm.subscribe("/xingtian/PD_params", 1, &State_Trotting::PD_Callback, this);
     }
-template class State_Trotting<double>;
-// template class State_Trotting<float>;
+// template class State_Trotting<double>;
+template class State_Trotting<float>;

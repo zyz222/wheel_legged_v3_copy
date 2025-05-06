@@ -24,6 +24,7 @@
 template <typename T> class DesiredStateCommand;  // 前向声明
 template <typename T> class GaitScheduler;
 template <typename T> class WaveGenerator;
+template <typename T> class Estimator;
 // 后续代码...
 template <typename T>
 struct CtrlComponents{
@@ -34,10 +35,9 @@ public:
     {
         lowCmd = new LowlevelCmd<T>();
         lowState = new LowlevelState<T>();
-        contact = new VecInt4;
+        contact = new Vec4<T>;
         phase = new Vec4<T>;
-        
-        *contact = VecInt4(0, 0, 0, 0);
+        *contact = Vec4<T>(0, 0, 0, 0);
         *phase = Vec4<T>(0.5, 0.5, 0.5, 0.5);
     }
     ~CtrlComponents(){
@@ -49,6 +49,10 @@ public:
         delete estimator;
         delete balCtrl;
         delete _desiredStateCommand;
+        delete _gaitScheduler;
+        delete contact;
+        delete phase;
+        delete _xingtianParameters;
         // delete _xingtian_model;
     }
     
@@ -67,7 +71,7 @@ public:
     BalanceCtrl<T> *balCtrl;
     // VisualizationData<T> *visualizationData;                 //可视化数据
     
-    VecInt4 *contact;                        //在stateEstimatorcontainer 中也包含有
+    Vec4<T> *contact;                        //在stateEstimatorcontainer 中也包含有
     Vec4<T> *phase;
 
    
@@ -106,7 +110,7 @@ public:
         estimator = new Estimator<T>(robotModel, lowState, contact, phase, dt);
         balCtrl = new BalanceCtrl<T>(robotModel);
         // _desiredStateCommand =new DesiredStateCommand<T>(ioInter->getKeyboard(),ioInter->getRCControl(),estimator,dt);
-        _desiredStateCommand =new DesiredStateCommand<T>(ioInter->getKeyboard(),ioInter->getRCControl(),estimator,dt);
+        _desiredStateCommand =new DesiredStateCommand<T>(ioInter->getKeyboard(),ioInter->getRCControl(),dt);
     
         //build model
         _xingtian_model = buildXingtian<T>();
@@ -119,7 +123,7 @@ private:
     WaveStatus _waveStatus = WaveStatus::SWING_ALL;
 
 };
-template struct CtrlComponents<double>;
-// template struct CtrlComponents<float>;
+// template struct CtrlComponents<double>;
+template struct CtrlComponents<float>;
 
 #endif  // CTRLCOMPONENTS_H

@@ -37,7 +37,7 @@ struct xingtian_State {
   T acceleration[3];
   T wheel_force[12];
 };
-template struct xingtian_State<double>;
+// template struct xingtian_State<double>;
 template struct xingtian_State<float>;
 
 template <typename T>
@@ -92,7 +92,7 @@ struct IMU
         return q;
     }
 };
-template struct IMU<double>;
+// template struct IMU<double>;
 template struct IMU<float>;
 
 template <typename T>
@@ -170,6 +170,6 @@ struct LowlevelState
         }
     }
 };
-template struct LowlevelState<double>;
+// template struct LowlevelState<double>;
 template struct LowlevelState<float>;
 #endif  //LOWLEVELSTATE_HPP

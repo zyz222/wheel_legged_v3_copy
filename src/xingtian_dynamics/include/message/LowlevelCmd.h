@@ -115,7 +115,7 @@ template <typename T>
 struct LowlevelCmd{
     MotorCmd motorCmd[12];
     Task_KpKd<T> task_kpkd;
-    LegControllerCommand<T> commands[4];     //4条腿的控制指令
+    LegControllerCommand<float> commands[4];     //4条腿的控制指令
 
     void setQ(Vec12<T> q){
         for(int i(0); i<12; ++i){
@@ -138,10 +138,11 @@ struct LowlevelCmd{
         motorCmd[legID*3+2].dq = qdi(2);
     }
     // 实机部署时改为20
-    void setTau(Vec12<T> tau, Vec2<T> torqueLimit = Vec2<T>(-50, 50)){
+    void setTau(Vec12<T> tau, Vec2<T> torqueLimit = Vec2<T>(-30, 30)){
         for(int i(0); i<12; ++i){
             if(std::isnan(tau(i))){
                 printf("[ERROR] The setTau function meets Nan\n");
+                tau(i) = 0;
             }
             motorCmd[i].tau = saturation(tau(i), torqueLimit);
         }
@@ -347,7 +348,7 @@ struct LowlevelCmd{
 
 
 };
-template struct LowlevelCmd<double>;
+// template struct LowlevelCmd<double>;
 template struct LowlevelCmd<float>;
 
 

@@ -7,12 +7,12 @@
 #pragma once
 
 #include "FSMState.h"
-#include "ros/ros.h"
+#include <ros/ros.h>
 // #include "thirdParty/quadProgpp/QuadProg++.hh"
-#include "osqp/osqp.h"
+#include <osqp/osqp.h>
 #include <geometry_msgs/Twist.h>
 #include "control/BalanceCtrl.h"
-#include "Eigen/Sparse"
+#include <Eigen/Sparse>
 using namespace Eigen;
 
 template <typename T>
@@ -46,7 +46,7 @@ private:
     Estimator<T> *_est;
     QuadrupedRobot<T> *_robModel;
     BalanceCtrl<T> *_balCtrl;
-    VecInt4 *_contact;
+    Vec4<T> *_contact;
 
     RotMat<T> _Rd, _RdInit;        //旋转矩阵
     Vec3<T> _pcd, _pcdInit;
@@ -98,14 +98,14 @@ private:
     DVec<T> Xref;
     DVec<T> Uref;
     DVec<T> diffX;
-    DMat<T> H,A_eq;
+    DMat<double> H,A_eq;
     DVec<double> f;
     DVec<double> lbU;
     DVec<double> ubU;
     SparseMatrix<double> H_sparse;
     SparseMatrix<double> A_eq_sparse;
     // DVec<T> l,u;
-    DVec<T> U_opt;
+    DVec<double> U_opt;
     OSQPCscMatrix P_csc;
     OSQPCscMatrix A_csc;
     OSQPFloat* F = nullptr;

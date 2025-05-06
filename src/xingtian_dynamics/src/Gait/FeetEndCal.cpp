@@ -13,7 +13,7 @@ FeetEndCal<T>::FeetEndCal(CtrlComponents<T> *ctrlComp)
     _Tswing   = ctrlComp->waveGen->getTswing();   //获取摆动相位时间
 
     // _kx = 0.15;   //用于调节足端x位置的比例增益
-    _kx = 0.15;
+    _kx = 0.2;
     _ky = 0.005;
     _kyaw = 0.005;
 
@@ -33,7 +33,7 @@ FeetEndCal<T>::~FeetEndCal(){
 template <typename T>
 Vec3<T> FeetEndCal<T>::calFootPos(int legID, Vec2<T> vxyGoalGlobal, T dYawGoal, T phase){
 
-    _bodyVelGlobal = _lowState->getRotMat().transpose()*_est->cheater_getVelocity();     //获取机身当前速度，世界坐标下
+    _bodyVelGlobal = _est->getVelocity2B();     //获取机身当前速度，机身坐标下
 
     //  = _est->cheater_getFootPos(legID);
     // _bodyWGlobal = this->_lowState->getGyro();   //获取机身当前角速度，机身坐标下
@@ -43,30 +43,30 @@ Vec3<T> FeetEndCal<T>::calFootPos(int legID, Vec2<T> vxyGoalGlobal, T dYawGoal, 
     _nextStep(1) = 0;
     // _nextStep(2) = -0.22; 
     // _nextStep(2) = _robModel->getFootPosition(*(this->_lowState),legID,FrameType::BODY)(2);   
-    _nextStep(2) = 0;                  //有改进的空间！！
+    // _nextStep(2) = 0;                  //有改进的空间！！
     // _yaw = _lowState->getYaw();
-    // // _yaw = 0;
+    _yaw = 0;
     // _dYaw = _lowState->getDYaw();
     // _nextYaw = _dYaw*(1-phase)*_Tswing + _dYaw*_Tstance/2 + _kyaw*(dYawGoal - _dYaw);
-
-    _nextStep(0) = saturation(_nextStep(0), Vec2<T>(-0.1,0.1));
+    // _nextYaw = 0;
+    // _nextStep(0) = saturation(_nextStep(0), Vec2<T>(-0.2,0.2));
     
     // // 从此从此
     // // _footPos = _est->getPosition() + _nextStep;      //机身当前位置，全局坐标下，往前加了X方向距离
     // // std::cout<<"_footPos: "<<_footPos<<std::endl;
-    // _nextStep(0) += _feetRadius(legID) * cos(_yaw + _feetInitAngle(legID) + _nextYaw);    //转换到各个腿上
-    // _nextStep(1) += _feetRadius(legID) * sin(_yaw + _feetInitAngle(legID) + _nextYaw);
+    _nextStep(0) += _feetRadius(legID) * cos(_yaw + _feetInitAngle(legID) + _nextYaw);    //转换到各个腿上
+    _nextStep(1) += _feetRadius(legID) * sin(_yaw + _feetInitAngle(legID) + _nextYaw);
 
     // _nextStep(0) = saturation(_nextStep(0), Vec2<T>(_est->cheater_getFootPos(legID)(0)-0.05,_est->cheater_getFootPos(legID)(0)+0.05));    //限制它每次只能走0.15m
     // _nextStep(1) = saturation(_nextStep(1), Vec2<T>(_est->cheater_getFootPos(legID)(1)-0.05,_est->cheater_getFootPos(legID)(1)+0.05));
     // // std::cout<<"_nextStep(1): "<<_nextStep(1)<<std::endl;
     // // _footPos = _est->getPosition() + _nextStep;
-    // // _footPos = _nextStep;
-    _footPos = _robModel->getFootPosition(*_lowState,legID,FrameType::BODY) +_nextStep;
+    _footPos = _nextStep;
+    // _footPos = _robModel->getFootPosition(*_lowState,legID,FrameType::BODY) +_nextStep;
     // _footPos = _est->cheater_getFootPos(legID) + _nextStep;
-    _footPos(2) = 0.0;
+    // _footPos(2) = 0.0;
     // std::cout<<"_footPos: "<<_footPos<<std::endl;
     return _footPos;
 }
-template class FeetEndCal<double>;
-// template class FeetEndCal<float>;
+// template class FeetEndCal<double>;
+template class FeetEndCal<float>;

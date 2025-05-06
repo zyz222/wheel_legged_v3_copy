@@ -1487,5 +1487,5 @@ xingtianRobot<T>::xingtianRobot(){
     this->Lc1 = 0.0489;
     this->Lc2 = 0.08036;  //连杆长度以及重心位置  这些在这里进行赋值！！
 }
-template class xingtianRobot<double>;
+// template class xingtianRobot<double>;
 template class xingtianRobot<float>;

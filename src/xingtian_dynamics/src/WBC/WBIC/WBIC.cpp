@@ -27,12 +27,15 @@ void WBIC<T>::MakeTorque(DVec<T>& cmd, void* extra_input) {     //核心功能�
   _SetCost();                    //设置优化问题的成本函数矩阵和向量
 
   DVec<T> qddot_pre;              //存储关节加速度的初始估计
+
+
   DMat<T> JcBar;                  //加权逆雅可比矩阵
   DMat<T> Npre;                  //投影矩阵，表示任务空间的投影
 
   if (_dim_rf > 0) {       //处理接触点，如果有反作用力约束
     // Contact Setting 
     _ContactBuilding();              //构建接触点雅可比矩阵和反作用力约束
+
 
     // Set inequality constraints
     _SetInEqualityConstraint();     //设置不等式约束条件。

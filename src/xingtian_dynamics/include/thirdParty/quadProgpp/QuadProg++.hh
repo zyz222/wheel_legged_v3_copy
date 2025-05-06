@@ -65,7 +65,7 @@ s.t.
 #ifndef _QUADPROGPP
 #define _QUADPROGPP
 
-#include "Array.hh"
+#include "thirdParty/quadProgpp/Array.hh"
 #include <eigen3/Eigen/Dense>
 
 namespace quadprogpp {

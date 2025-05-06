@@ -33,7 +33,7 @@ BalanceCtrl<T>::BalanceCtrl(QuadrupedRobot<T> *robModel){
     u << 20, 20, 50, 20, 20, 50, 20, 20, 50, 20, 20, 50;            //二次项正则化参数。调大可以使输入更加平滑
     _alpha = 0.301;                    //权重W矩阵的系数
     _beta  = 0.5;                       //权重矩阵U的系数
-    _fricRatio = 0.5;                   //摩擦锥系数
+    _fricRatio = 0.6;                   //摩擦锥系数
 
     s << 120, 120,120, 450, 450, 450;    //二次规划目标权重参数！   调节状态的，状态更逼近
 
@@ -54,7 +54,7 @@ BalanceCtrl<T>::BalanceCtrl(QuadrupedRobot<T> *robModel){
 // contact: 四条腿是否接触，1表示接触，0表示不接触
 //ddpcd 期望加速度 
 template <typename T> 
-Vec34<T> BalanceCtrl<T>::calF(Vec3<T> ddPcd, Vec3<T> dWbd, RotMat<T> rotM, Vec34<T> feetPos2B, VecInt4 contact){
+Vec34<T> BalanceCtrl<T>::calF(Vec3<T> ddPcd, Vec3<T> dWbd, RotMat<T> rotM, Vec34<T> feetPos2B, Vec4<T> contact){
     calMatrixA(feetPos2B, rotM, contact);  //计算接触力矩阵 A   这个也没问题！！！！
     calVectorBd(ddPcd, dWbd, rotM);       //计算期望力向量 期望位置，角速度，旋转矩阵 b
     calConstraints(contact);              //计算约束条件
@@ -75,7 +75,7 @@ Vec34<T> BalanceCtrl<T>::calF(Vec3<T> ddPcd, Vec3<T> dWbd, RotMat<T> rotM, Vec34
 // rotM: 机体系到机体坐标系旋转矩阵
 // contact: 四条腿是否接触，1表示接触，0表示不接触
 template <typename T> 
-void BalanceCtrl<T>::calMatrixA(Vec34<double> feetPos2B, RotMat<double> rotM, VecInt4 contact){
+void BalanceCtrl<T>::calMatrixA(Vec34<T> feetPos2B, RotMat<T> rotM, Vec4<T> contact){
     for(int i(0); i < 4; ++i){
         _A.block(0, 3*i, 3, 3) = _I3;
         _A.block(3, 3*i, 3, 3) = skew<T>(feetPos2B.col(i) - rotM*_pcb);   //skew  构建反对称矩阵
@@ -88,7 +88,7 @@ void BalanceCtrl<T>::calMatrixA(Vec34<double> feetPos2B, RotMat<double> rotM, Ve
 // rotM:机身当前姿态
 //b 矩阵
 template <typename T> 
-void BalanceCtrl<T>::calVectorBd(Vec3<double> ddPcd, Vec3<double> dWbd, RotMat<double> rotM){
+void BalanceCtrl<T>::calVectorBd(Vec3<T> ddPcd, Vec3<T> dWbd, RotMat<T> rotM){
     _bd.head(3) = _mass * (ddPcd - _g);            //ma   这个没问题
     _bd.tail(3) = (rotM * _Ib * rotM.transpose()) * dWbd;   //RIRt * dWbd
     // std::cout << "B_: " << _bd << std::endl;   
@@ -98,7 +98,7 @@ void BalanceCtrl<T>::calVectorBd(Vec3<double> ddPcd, Vec3<double> dWbd, RotMat<d
 //非接触腿的接触力设为0
 //构建两个约束矩阵，CI和CE，CI为接触腿，CE为非接触腿
 template <typename T> 
-void BalanceCtrl<T>::calConstraints(VecInt4 contact){
+void BalanceCtrl<T>::calConstraints(Vec4<T> contact){
     int contactLegNum = 0;
     for(int i(0); i<4; ++i){
         if(contact(i) == 1){
@@ -185,5 +185,5 @@ void BalanceCtrl<T>::solveQP(){
         _F[i] = x[i];      //提取优化力的结果
     }
 }
-template class BalanceCtrl<double>;
-// template class BalanceCtrl<float>;
+// template class BalanceCtrl<double>;
+template class BalanceCtrl<float>;

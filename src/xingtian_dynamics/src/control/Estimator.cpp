@@ -17,7 +17,7 @@
 #define BOLD    "\033[1m"   // 加粗
 template <typename T>
 Estimator<T>::Estimator(QuadrupedRobot<T> *robotModel, LowlevelState<T>* lowState, 
-                     VecInt4 *contact, Vec4<T> *phase, T dt, Vec18<T> Qdig,
+                     Vec4<T> *contact, Vec4<T> *phase, T dt, Vec18<T> Qdig,
                      std::string testName)
           :_robModel(robotModel), _lowState(lowState), _contact(contact),
            _phase(phase), _dt(dt), _Qdig(Qdig), _estName(testName){
@@ -28,7 +28,7 @@ Estimator<T>::Estimator(QuadrupedRobot<T> *robotModel, LowlevelState<T>* lowStat
 
 template <typename T>
 Estimator<T>::Estimator(QuadrupedRobot<T> *robotModel, LowlevelState<T>* lowState, 
-                     VecInt4 *contact, Vec4<T> *phase, T dt)
+                     Vec4<T> *contact, Vec4<T> *phase, T dt)
           :_robModel(robotModel), _lowState(lowState), _contact(contact), 
            _phase(phase), _dt(dt){
 
@@ -217,7 +217,7 @@ void Estimator<T>::run(){
     _SR = _Slu.solve(_R);                   //观测噪声与状态预测之间的关联修正     S.inverse* _R
     _STC = (_S.transpose()).lu().solve(_C);//
     // _IKC = I18 - _Ppriori*_C.transpose()*_Sc;
-    _IKC = I18 - _Ppriori.template cast<double>() * _C.transpose().template cast<double>() * _Sc.template cast<double>();
+    _IKC = I18 - _Ppriori * _C.transpose() * _Sc;
     _xhat += _Ppriori * _C.transpose() * _Sy;    //离散化后的状态方程，求解状态估计值
 
     _P =  _IKC * _Ppriori * _IKC.transpose()
@@ -239,9 +239,24 @@ void Estimator<T>::run(){
     
     // _RCheck->measure(_y);
     // _uCheck->measure(_u);
+    stateEstimate.position = cheater_getPosition();
+    stateEstimate.vWorld = cheater_getVelocity();
+    stateEstimate.vBody = getVelocity2B();
+    stateEstimate.orientation = getQuat();
+    stateEstimate.omegaBody = getomega();
+    stateEstimate.omegaWorld = getomegaworld();
+    stateEstimate.rBody = getRotMat();
+    stateEstimate.rpy = getRPY();
+    stateEstimate.aBody = getAcc2B();
+    stateEstimate.aWorld = getAccGlobal();
+    stateEstimate.contactEstimate = *_contact;
+
+
+
     
 }
 //返回机器人中心在世界坐标系下的位置
+
 template <typename T>
 Vec3<T> Estimator<T>::getPosition(){
     // std::cout << "状态估计器xhat_PG: " << _xhat(0) << " " << _xhat(1) << " " << _xhat(2) << std::endl;
@@ -313,5 +328,5 @@ Vec34<T> Estimator<T>::getPosFeet2BGlobal(){
     }
     return feet2BPos;
 }
-template class Estimator<double>;
-// template class Estimator<float>;
+// template class Estimator<double>;
+template class Estimator<float>;

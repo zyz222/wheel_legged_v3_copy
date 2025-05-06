@@ -62,8 +62,8 @@ void State_WheelTest<T>::mpc_init()     //这个是绝对控制量MPC，还有�
          dt / m, dt / m, dt / m, dt / m,
          (-dt * L) / (2 * J), (-dt * L) / (2 * J), (dt * L) / (2 * J), (dt * L) / (2 * J);
     A_powers.resize(Np);       //预计算A的N次幂矩阵
-    Phi = MatrixXd::Zero(n*Np,n);         //填充fai矩阵
-    Gamma = MatrixXd::Zero(n * Np, p * Np);
+    Phi = MatrixXf::Zero(n*Np,n);         //填充fai矩阵
+    Gamma = MatrixXf::Zero(n * Np, p * Np);
     // /*
     // Phi.block(0, 0, n, n) = A;
     // A_powers[0] = A; // A^1
@@ -97,7 +97,7 @@ void State_WheelTest<T>::mpc_init()     //这个是绝对控制量MPC，还有�
     R(3,3) = 50;
    
     // 构造 \Omega = diag(Q, Q, ..., Q, S) 大小 (n*Np) x (n*Np) 不用更新！！
-    Omega = MatrixXd::Zero(n*Np, n*Np);
+    Omega = MatrixXf::Zero(n*Np, n*Np);
     for(int i=0; i<Np; ++i) {
         // 对角块依次放 Q，最后一块可以放 S
         // 这里演示：前 Np-1 个都是 Q，第 Np 个放 S
@@ -108,7 +108,7 @@ void State_WheelTest<T>::mpc_init()     //这个是绝对控制量MPC，还有�
         }
     }
     // 构造 \Psi = diag(R, R, ..., R) 大小 (p*Np) x (p*Np)
-    Psi = MatrixXd::Zero(p*Np, p*Np);                //不用更新！
+    Psi = MatrixXf::Zero(p*Np, p*Np);                //不用更新！
     for(int i=0; i<Np; ++i) {
         Psi.block(i*p, i*p, p, p) = R;
     }
@@ -122,9 +122,9 @@ void State_WheelTest<T>::mpc_init()     //这个是绝对控制量MPC，还有�
 
     // Vec4 u0;     //控制向量
     // u0<< f1, f2, f3, f4;
-    x0 = VectorXd::Zero(n);               // 当前状态
-    Xref = VectorXd::Zero(n*Np);          // 期望轨迹
-    Uref = VectorXd::Zero(p*Np);          // 期望控制序列
+    x0 = VectorXf::Zero(n);               // 当前状态
+    Xref = VectorXf::Zero(n*Np);          // 期望轨迹
+    Uref = VectorXf::Zero(p*Np);          // 期望控制序列
     // 在实际代码中你会有更具体的参考轨迹 Xref、参考控制 Uref。
 
     x0<< x,y,theta_k,v,omega;
@@ -325,9 +325,9 @@ void State_WheelTest<T>::WheelControl(){
     diffX = Phi * x0 - Xref;   // 大小 = n*Np   误差项
     // std::cout<<"diffX = "<<diffX<<std::endl;
     // 计算 H
-    H = Gamma.transpose() * Omega * Gamma + Psi;  // 大小 = (p*Np) x (p*Np)    这个没问题，
+    H = (Gamma.transpose() * Omega * Gamma + Psi).template cast<double>();  // 大小 = (p*Np) x (p*Np)    这个没问题，
     // 计算 f
-    f = Gamma.transpose() * Omega * diffX; // 大小 = p*Np   //////反馈的状态量为diffX，
+    f = (Gamma.transpose() * Omega * diffX).template cast<double>(); // 大小 = p*Np   //////反馈的状态量为diffX，
     // std::cout<<"代价函数之前没问题"<<std::endl;
     // std::cout<< "Psi矩阵是否全零？\n" << (Psi.isZero() ? "是" : "否") << std::endl;
     // std::cout << "Gamma矩阵示例：\n" << Gamma.block(0,0,4,4) << std::endl;
@@ -412,10 +412,7 @@ void State_WheelTest<T>::WheelControl(){
     osqp_solve(solver);
     // std::cout<<"求解没问题"<<std::endl;
     /// 提取最优解
-    U_opt = Map<VectorXd>(
-        solver->solution->x, 
-        p*Np  // 确保维度正确
-    );
+    U_opt = Map<VectorXd>(solver->solution->x, p*Np);// 确保维度正确
 
     // 输出第一个控制量
     std::cout << "Optimal Forces (F1-F4): " 
@@ -539,5 +536,5 @@ Vec34<T> State_WheelTest<T>::_calcOP(T row, T pitch, T yaw, T height){
   
     return vecOP;     //获取到4个足端的位置
 }
-template class State_WheelTest<double>;
-// template class State_WheelTest<float>;
+// template class State_WheelTest<double>;
+template class State_WheelTest<float>;
